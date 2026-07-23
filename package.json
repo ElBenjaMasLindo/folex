@@ -1,5 +1,5 @@
 {
-  "name": "folex",
+  "name": "folx",
   "version": "0.1.0",
   "description": "Lightweight, LLM-friendly layering library that makes plain HTML look magical.",
   "type": "module",
