@@ -1,4 +1,4 @@
-# Folex (folx)
+# Folex (folex-fx)
 
 Lightweight, zero-dependency visual effects library for plain HTML. Glass morphism, glow, ripple, and particle effects driven entirely by CSS custom properties — no JavaScript configuration required.
 
@@ -11,9 +11,9 @@ Lightweight, zero-dependency visual effects library for plain HTML. Glass morphi
 ## Install
 
 ```sh
-pnpm add folx
+pnpm add folex-fx
 # or
-npm install folx
+npm install folex-fx
 ```
 
 ## Quickstart
@@ -23,7 +23,7 @@ npm install folx
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="node_modules/folx/dist/folex.css" />
+  <link rel="stylesheet" href="node_modules/folex-fx/dist/folex.css" />
   <style>
     body { background: #0a0a12; min-height: 100vh; display: grid; place-items: center; }
     .box {
@@ -38,7 +38,7 @@ npm install folx
     Folex
   </div>
   <script type="module">
-    import { init } from "folx";
+    import { init } from "folex-fx";
     init();
   </script>
 </body>
@@ -73,7 +73,7 @@ Add a `data-folex` attribute with one or more space-separated effect names:
 Then call `init()` once after DOM ready:
 
 ```js
-import { init } from "folx";
+import { init } from "folex-fx";
 init();
 ```
 
@@ -94,7 +94,7 @@ init({ root: document.getElementById("app"), watch: true });
 ### Extending with custom effects
 
 ```js
-import { registry } from "folx";
+import { registry } from "folex-fx";
 registry.myEffect = (host, vars) => {
   // vars.color, vars.intensity, vars.speed, ...
   host.style.filter = `hue-rotate(${vars.speed * 60}deg)`;
@@ -128,7 +128,7 @@ All configuration via `--fx-*` properties on the host element. Every property ha
 ## API
 
 ```ts
-import { init, resolveVars, registry } from "folx";
+import { init, resolveVars, registry } from "folex-fx";
 ```
 
 ### `init(options?)`
@@ -164,7 +164,7 @@ registry.myEffect = (host, vars) => { /* ... */ };
 Types are included. Import them:
 
 ```ts
-import type { InitOptions, ResolvedVars, Tier, EffectName, EffectSetup, EffectRegistry } from "folx";
+import type { InitOptions, ResolvedVars, Tier, EffectName, EffectSetup, EffectRegistry } from "folex-fx";
 ```
 
 ## Known Limitations
