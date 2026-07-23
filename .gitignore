@@ -1,0 +1,27 @@
+# TypeScript Artifacts
+node_modules/
+.pnpm-store/
+dist/
+
+# Nix
+.direnv/
+result
+result-*
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+
+# IDEs
+.vscode/
+.idea/
+.zed/
+*.swp
+
+# OS Specific
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env*

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Folex — hostile inputs</title>
+    <link rel="stylesheet" href="../dist/folex.css" />
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0; min-height: 100vh; display: grid; place-items: center;
+        gap: 48px; padding: 40px; background: #06070d;
+        font: 14px/1.4 system-ui, sans-serif; color: #e7e3f1;
+      }
+      .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 48px; }
+      .cell { display: grid; place-items: center; gap: 10px; text-align: center; }
+      .hostile {
+        width: 120px; height: 120px; border-radius: 50%;
+        background: #3a7bff; display: grid; place-items: center; color: #fff;
+        font-size: 11px;
+      }
+      code { opacity: 0.7; font-size: 11px; }
+    </style>
+  </head>
+  <body>
+    <div class="grid">
+      <div class="cell">
+        <!-- Out-of-range layers: 999 MUST clamp to 12. -->
+        <div class="hostile" data-folex="ripple" style="--fx-layers: 999;"></div>
+        <code>--fx-layers: 999 → clamps to 12</code>
+      </div>
+      <div class="cell">
+        <!-- Invalid color falls back to the derived/warm default. -->
+        <div class="hostile" data-folex="glow" style="--fx-color: not-a-color;"></div>
+        <code>--fx-color: not-a-color → fallback</code>
+      </div>
+      <div class="cell">
+        <!-- Negative speed clamps to the 0.1 minimum, never breaks. -->
+        <div class="hostile" data-folex="glow" style="--fx-speed: -50;"></div>
+        <code>--fx-speed: -50 → clamps to 0.1</code>
+      </div>
+      <div class="cell">
+        <!-- Unknown enum value falls back to turbulence. -->
+        <div class="hostile" data-folex="ripple" style="--fx-field: nonsense; --fx-color: #c4b5fd;"></div>
+        <code>--fx-field: nonsense → turbulence</code>
+      </div>
+    </div>
+    <div class="cell">
+      <!-- Everything hostile at once: the page must keep rendering. -->
+      <div
+        class="hostile"
+        data-folex="glow ripple pixie"
+        style="--fx-layers: 999; --fx-color: not-a-color; --fx-speed: -50; --fx-field: nonsense;"
+      ></div>
+      <code>all hostile at once → safe defaults</code>
+    </div>
+    <script type="module">
+      import { init } from "../dist/index.js";
+      init();
+    </script>
+  </body>
+</html>

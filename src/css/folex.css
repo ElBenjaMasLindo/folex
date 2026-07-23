@@ -1,0 +1,195 @@
+:host, * {
+  box-sizing: border-box;
+}
+
+@property --fx-prism-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.fx-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.fx-ripple-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.fx-ripple {
+  inset: -50%;
+  background-repeat: repeat;
+  background-size: 50%;
+  animation-duration: var(--fx-dur, 6s);
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes fx-ripple-drift {
+  0% {
+    transform: translate3d(-6%, -4%, 0);
+  }
+  100% {
+    transform: translate3d(6%, 4%, 0);
+  }
+}
+
+
+.fx-glass-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  backdrop-filter: blur(var(--fx-glass-frost-blur, 12px)) saturate(var(--fx-glass-frost-sat, 180%));
+  box-shadow:
+    var(--fx-glass-frost-shadow),
+    inset 0 0 0 1px color-mix(in srgb, var(--fx-color, white) 25%, transparent),
+    inset 0 1px 3px color-mix(in srgb, var(--fx-color, white) 45%, transparent);
+}
+
+.fx-glass-spectrum {
+  inset: 0;
+  border-radius: inherit;
+  opacity: var(--fx-glass-spectrum-op);
+  isolation: isolate;
+  mix-blend-mode: screen;
+}
+
+.fx-glass-spectrum::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  background: var(--fx-glass-spectrum-bg);
+  animation: fx-glass-pan var(--fx-glass-spectrum-dur, 8s) ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+.fx-glass-spectrum::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgb(110, 110, 110);
+  box-shadow: inset 0 0 50px white;
+  mix-blend-mode: multiply;
+}
+
+@keyframes fx-glass-pan {
+  0%   { transform: translate3d(-15%, -10%, 0) rotate(-3deg); }
+  100% { transform: translate3d(15%, 10%, 0) rotate(3deg); }
+}
+
+.fx-glass-chroma {
+  border-radius: inherit;
+  opacity: var(--fx-glass-chroma-op);
+  mix-blend-mode: screen;
+  box-shadow:
+    inset 15px 15px 40px var(--fx-glass-chroma-c1, oklch(70% 0.2 25)),
+    inset -15px -15px 40px var(--fx-glass-chroma-c2, oklch(70% 0.2 265));
+  animation: fx-glass-chroma-breathe 5s ease-in-out infinite;
+}
+
+@keyframes fx-glass-chroma-breathe {
+  0%, 100% { opacity: calc(var(--fx-glass-chroma-op) * 0.8); }
+  50%      { opacity: calc(var(--fx-glass-chroma-op) * 1.25); }
+}
+
+.fx-glass-highlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 255, 255, 0.25), transparent);
+  animation: fx-glass-highlight-breathe 6s ease-in-out infinite;
+}
+
+@keyframes fx-glass-highlight-breathe {
+  0%, 100% { opacity: 0.75; }
+  50%      { opacity: 1; }
+}
+
+.fx-glass-highlight::before,
+.fx-glass-highlight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.fx-glass-highlight::before {
+  background: radial-gradient(ellipse 70% 35% at 50% 0%, rgba(255, 60, 60, 0.18), transparent 60%);
+  mix-blend-mode: screen;
+}
+
+.fx-glass-highlight::after {
+  background: radial-gradient(ellipse 70% 35% at 50% 0%, rgba(60, 80, 255, 0.18), transparent 60%);
+  mix-blend-mode: screen;
+}
+
+.fx-glass-prism {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  will-change: filter, opacity;
+  border: 1.5px solid transparent;
+  background-image: conic-gradient(
+    from var(--fx-prism-angle),
+    oklch(74% 0.24 0),
+    oklch(68% 0.18 45),
+    oklch(74% 0.24 90),
+    oklch(68% 0.18 135),
+    oklch(74% 0.24 180),
+    oklch(68% 0.18 225),
+    oklch(74% 0.24 270),
+    oklch(68% 0.18 315),
+    oklch(74% 0.24 360)
+  );
+  background-origin: border-box;
+  background-clip: border-box;
+  -webkit-mask:
+    linear-gradient(black, black) padding-box,
+    linear-gradient(black, black);
+  -webkit-mask-composite: destination-out;
+  mask:
+    linear-gradient(black, black) padding-box,
+    linear-gradient(black, black);
+  mask-composite: exclude;
+  opacity: 0.6;
+  mix-blend-mode: screen;
+  animation:
+    fx-glass-prism-rotate 12s linear infinite,
+    fx-glass-prism-breathe 4s ease-in-out infinite;
+}
+
+@keyframes fx-glass-prism-rotate {
+  to { --fx-prism-angle: 360deg; }
+}
+
+@keyframes fx-glass-prism-breathe {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 0.75; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-layer,
+  .fx-glass-prism,
+  .fx-glass-highlight {
+    animation: none !important;
+  }
+}
+
+/* Contain blend modes only when glass is active to prevent blinding the backdrop-filter */
+:has(> .fx-glass-clip) > .fx-ripple-clip {
+  z-index: -1;
+}

@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Folex — Ultimate Effects Playground</title>
+    <!-- Google Fonts for modern tech design aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../dist/folex.css" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg-dark: #07070a;
+        --card-bg: rgba(18, 18, 26, 0.6);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --text-primary: #f3f4f6;
+        --text-secondary: #9ca3af;
+        --accent: #6366f1;
+        --accent-hover: #4f46e5;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-primary);
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Background manager */
+      #bg-container {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        transition: background 0.4s ease;
+        background-color: #000000;
+      }
+
+      #bg-svg-layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        pointer-events: none;
+      }
+
+      /* Premium Layout */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        background: rgba(10, 10, 15, 0.4);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--card-border);
+        z-index: 10;
+      }
+
+      header h1 {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #fff, #9ca3af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      header p {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid var(--card-border);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-primary);
+      }
+
+      .btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        border-color: transparent;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-hover);
+        border-color: transparent;
+      }
+
+      .btn-icon {
+        padding: 10px;
+        border-radius: 12px;
+      }
+
+      /* Main container */
+      .app-container {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        flex: 1;
+        height: calc(100vh - 73px);
+        overflow: hidden;
+      }
+
+      /* Sidebar styling */
+      .sidebar {
+        background: rgba(10, 10, 15, 0.6);
+        backdrop-filter: blur(25px);
+        border-right: 1px solid var(--card-border);
+        padding: 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      /* Sections & Panels */
+      .panel-section {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .panel-title {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-secondary);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 6px;
+      }
+
+      /* Controls layout */
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .control-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .control-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .control-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      /* Form inputs */
+      input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        outline: none;
+        transition: background 0.2s;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+
+      input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+
+      select, input[type="text"], input[type="color"] {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--card-border);
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 13px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      select:focus, input[type="text"]:focus {
+        border-color: var(--accent);
+      }
+
+      input[type="color"] {
+        padding: 4px;
+        height: 38px;
+        cursor: pointer;
+      }
+
+      /* Swatches row */
+      .swatches {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+
+      .swatch {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.15s, border-color 0.15s;
+      }
+
+      .swatch:hover {
+        transform: scale(1.15);
+        border-color: #ffffff;
+      }
+
+      /* Checkboxes grid */
+      .effects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .effect-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--card-border);
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s;
+      }
+
+      .effect-checkbox:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+
+      .effect-checkbox.active {
+        background: rgba(99, 102, 241, 0.15);
+        border-color: var(--accent);
+      }
+
+      .effect-checkbox input {
+        display: none;
+      }
+
+      .effect-checkbox-indicator {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+
+      .effect-checkbox.active .effect-checkbox-indicator {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .effect-checkbox.active .effect-checkbox-indicator::after {
+        content: '✓';
+        color: #fff;
+        font-size: 10px;
+        font-weight: bold;
+      }
+
+      /* Content Area */
+      .viewport-area {
+        display: grid;
+        grid-template-rows: 1fr 180px;
+        overflow: hidden;
+      }
+
+      /* Preview Space */
+      .preview-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 40px;
+        overflow: auto;
+      }
+
+      /* Actual elements rendering shapes */
+      .preview-host {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-weight: 600;
+        transition: width 0.3s, height 0.3s, border-radius 0.3s;
+      }
+
+      /* Shapes classes */
+      .shape-card {
+        width: 320px;
+        height: 200px;
+        border-radius: 24px;
+        font-size: 18px;
+        padding: 24px;
+      }
+
+      .shape-orb {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        font-size: 28px;
+      }
+
+      .shape-button {
+        width: 220px;
+        height: 58px;
+        border-radius: 29px;
+        font-size: 15px;
+      }
+
+      .shape-text {
+        font-size: 64px;
+        font-weight: 800;
+        box-shadow: none !important;
+        text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      }
+
+      /* Conditional options group visibility */
+      .option-block {
+        transition: opacity 0.3s, pointer-events 0.3s;
+      }
+      .option-block.disabled {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+
+      /* Code Generator Panel */
+      .code-panel {
+        background: rgba(10, 10, 15, 0.85);
+        border-top: 1px solid var(--card-border);
+        backdrop-filter: blur(20px);
+        padding: 20px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow: hidden;
+      }
+
+      .code-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .code-tabs {
+        display: flex;
+        gap: 8px;
+      }
+
+      .code-tab {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        transition: all 0.2s;
+      }
+
+      .code-tab.active {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+      }
+
+      .code-wrapper {
+        position: relative;
+        flex: 1;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 12px;
+        border: 1px solid var(--card-border);
+        overflow: auto;
+      }
+
+      pre {
+        padding: 16px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        color: #e5e7eb;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .copy-success-tooltip {
+        position: absolute;
+        top: -30px;
+        right: 10px;
+        background: #10b981;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(5px);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+
+      .copy-success-tooltip.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Quick presets row in top right */
+      .presets-select-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .presets-select-wrapper span {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background layers -->
+    <div id="bg-container">
+      <svg id="bg-svg-layer" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g1" cx="20%" cy="20%" r="55%">
+            <stop offset="0%" stop-color="#ff007f" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="g2" cx="80%" cy="30%" r="50%">
+            <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="g3" cx="40%" cy="80%" r="60%">
+            <stop offset="0%" stop-color="#7000ff" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="g4" cx="90%" cy="75%" r="45%">
+            <stop offset="0%" stop-color="#ffb700" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="1440" height="900" fill="#050507"/>
+        <circle cx="20%" cy="20%" r="450" fill="url(#g1)" filter="blur(90px)"/>
+        <circle cx="80%" cy="30%" r="400" fill="url(#g2)" filter="blur(90px)"/>
+        <circle cx="40%" cy="80%" r="500" fill="url(#g3)" filter="blur(90px)"/>
+        <circle cx="90%" cy="75%" r="350" fill="url(#g4)" filter="blur(90px)"/>
+        <!-- Fine vector grid for showing off refractions -->
+        <g stroke="rgba(255,255,255,0.06)" stroke-width="1">
+          <!-- Horizontal grid lines -->
+          <path d="M0,100 H1440 M0,200 H1440 M0,300 H1440 M0,400 H1440 M0,500 H1440 M0,600 H1440 M0,700 H1440 M0,800 H1440"/>
+          <!-- Vertical grid lines -->
+          <path d="M150,0 V900 M300,0 V900 M450,0 V900 M600,0 V900 M750,0 V900 M900,0 V900 M1050,0 V900 M1200,0 V900 M1350,0 V900"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Header bar -->
+    <header>
+      <div>
+        <h1>Folex Ultimate Effects Playground</h1>
+        <p>Experimenta con todas las combinaciones y variables de efectos.</p>
+      </div>
+
+      <div class="header-actions">
+        <!-- Quick presets -->
+        <div class="presets-select-wrapper">
+          <span>Presets:</span>
+          <select id="presets-select" style="width: 180px; padding: 6px 12px; height: 36px;">
+            <option value="carnival">Carnaval de Cristal</option>
+            <option value="neon-storm">Tormenta de Neón</option>
+            <option value="pixie-dust">Polvo de Hadas</option>
+            <option value="frosted">Hielo Escarchado</option>
+            <option value="space-odyssey">Odisea Espacial</option>
+          </select>
+        </div>
+
+        <!-- Toggle Background button -->
+        <button id="toggle-bg-btn" class="btn">
+          <span>Fondo: Negro</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- App layout -->
+    <div class="app-container">
+      <!-- Left sidebar panel controls -->
+      <aside class="sidebar">
+        <!-- 1. Effects selector -->
+        <div class="panel-section">
+          <div class="panel-title">Efectos Activos</div>
+          <div class="effects-grid">
+            <label class="effect-checkbox" id="lbl-glass">
+              <input type="checkbox" id="chk-glass" checked />
+              <div class="effect-checkbox-indicator"></div>
+              <span class="control-label">Glass</span>
+            </label>
+            <label class="effect-checkbox" id="lbl-glow">
+              <input type="checkbox" id="chk-glow" checked />
+              <div class="effect-checkbox-indicator"></div>
+              <span class="control-label">Glow</span>
+            </label>
+            <label class="effect-checkbox" id="lbl-ripple">
+              <input type="checkbox" id="chk-ripple" checked />
+              <div class="effect-checkbox-indicator"></div>
+              <span class="control-label">Ripple</span>
+            </label>
+            <label class="effect-checkbox" id="lbl-pixie">
+              <input type="checkbox" id="chk-pixie" />
+              <div class="effect-checkbox-indicator"></div>
+              <span class="control-label">Pixie</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 2. Shape and Content Config -->
+        <div class="panel-section">
+          <div class="panel-title">Forma y Texto</div>
+          <div class="control-group">
+            <label class="control-label">Forma del Elemento</label>
+            <select id="shape-select">
+              <option value="shape-card">Tarjeta (Card)</option>
+              <option value="shape-orb">Esfera (Orb)</option>
+              <option value="shape-button">Botón (Button)</option>
+              <option value="shape-text">Texto Grande</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Texto de Previsualización</label>
+            <input type="text" id="preview-text-input" value="Folex" />
+          </div>
+        </div>
+
+        <!-- 3. General Variables -->
+        <div class="panel-section">
+          <div class="panel-title">Parámetros Generales</div>
+          <!-- Color Picker -->
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Color base (--fx-color)</span>
+              <span class="control-value" id="val-color">#ec4899</span>
+            </div>
+            <input type="color" id="input-color" value="#ec4899" />
+            <div class="swatches">
+              <div class="swatch" style="background: #6366f1;" data-color="#6366f1"></div>
+              <div class="swatch" style="background: #10b981;" data-color="#10b981"></div>
+              <div class="swatch" style="background: #f43f5e;" data-color="#f43f5e"></div>
+              <div class="swatch" style="background: #d946ef;" data-color="#d946ef"></div>
+              <div class="swatch" style="background: #f59e0b;" data-color="#f59e0b"></div>
+              <div class="swatch" style="background: #06b6d4;" data-color="#06b6d4"></div>
+            </div>
+          </div>
+          <!-- Intensity -->
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Intensidad (--fx-intensity)</span>
+              <span class="control-value" id="val-intensity">0.8</span>
+            </div>
+            <input type="range" id="input-intensity" min="0" max="1" step="0.05" value="0.8" />
+          </div>
+          <!-- Speed -->
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Velocidad (--fx-speed)</span>
+              <span class="control-value" id="val-speed">1.5</span>
+            </div>
+            <input type="range" id="input-speed" min="0.1" max="5" step="0.1" value="1.5" />
+          </div>
+        </div>
+
+        <!-- 4. Glass specific variables -->
+        <div class="panel-section option-block" id="block-glass">
+          <div class="panel-title">Configuración: Glass</div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Desenfoque (--fx-glass-blur)</span>
+              <span class="control-value" id="val-glass-blur">20</span>
+            </div>
+            <input type="range" id="input-glass-blur" min="0" max="40" step="1" value="20" />
+          </div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Saturación (--fx-glass-saturate)</span>
+              <span class="control-value" id="val-glass-saturate">220%</span>
+            </div>
+            <input type="range" id="input-glass-saturate" min="100" max="300" step="10" value="220" />
+          </div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Croma (--fx-glass-chroma)</span>
+              <span class="control-value" id="val-glass-chroma">0.8</span>
+            </div>
+            <input type="range" id="input-glass-chroma" min="0" max="1" step="0.05" value="0.8" />
+          </div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Velocidad de Espectro (--fx-glass-spectrum-speed)</span>
+              <span class="control-value" id="val-glass-spectrum-speed">2</span>
+            </div>
+            <input type="range" id="input-glass-spectrum-speed" min="0.1" max="5" step="0.1" value="2" />
+          </div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Tinte (--fx-tint)</span>
+              <span class="control-value" id="val-tint">0.2</span>
+            </div>
+            <input type="range" id="input-tint" min="0" max="1" step="0.05" value="0.2" />
+          </div>
+        </div>
+
+        <!-- 5. Ripple specific variables -->
+        <div class="panel-section option-block" id="block-ripple">
+          <div class="panel-title">Configuración: Ripple</div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Capas (--fx-layers)</span>
+              <span class="control-value" id="val-layers">4</span>
+            </div>
+            <input type="range" id="input-layers" min="1" max="12" step="1" value="4" />
+          </div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Distorsión (--fx-distort)</span>
+              <span class="control-value" id="val-distort">0.3</span>
+            </div>
+            <input type="range" id="input-distort" min="0" max="1" step="0.05" value="0.3" />
+          </div>
+          <div class="control-group">
+            <label class="control-label">Campo de Ruido (--fx-field)</label>
+            <select id="input-field">
+              <option value="turbulence" selected>Turbulencia</option>
+              <option value="cellular">Celular (Voronoi)</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Mezcla (--fx-blend)</label>
+            <select id="input-blend">
+              <option value="overlay" selected>overlay</option>
+              <option value="screen">screen</option>
+              <option value="multiply">multiply</option>
+              <option value="soft-light">soft-light</option>
+              <option value="hard-light">hard-light</option>
+              <option value="darken">darken</option>
+              <option value="lighten">lighten</option>
+              <option value="color-dodge">color-dodge</option>
+              <option value="color-burn">color-burn</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 6. Pixie specific variables -->
+        <div class="panel-section option-block disabled" id="block-pixie">
+          <div class="panel-title">Configuración: Pixie</div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Densidad (--fx-density)</span>
+              <span class="control-value" id="val-density">1.25</span>
+            </div>
+            <input type="range" id="input-density" min="0" max="3" step="0.05" value="1.25" />
+          </div>
+          <div class="control-group">
+            <div class="control-row">
+              <span class="control-label">Escala de Mota (--fx-scale)</span>
+              <span class="control-value" id="val-scale">1</span>
+            </div>
+            <input type="range" id="input-scale" min="0.1" max="5" step="0.1" value="1" />
+          </div>
+          <div class="control-group">
+            <label class="control-label">Límites (--fx-pixie-bounds)</label>
+            <select id="input-pixie-bounds">
+              <option value="normal" selected>normal</option>
+              <option value="loose">loose (amplio)</option>
+              <option value="tight">tight (ajustado)</option>
+              <option value="strict">strict (estricto)</option>
+            </select>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Area -->
+      <main class="viewport-area">
+        <!-- Render space -->
+        <div class="preview-container">
+          <!-- Dynamic element injected/recreated here -->
+          <div id="preview-element" class="preview-host shape-card" data-folex="glass glow ripple">
+            Folex
+          </div>
+        </div>
+
+        <!-- Code snippet generation area -->
+        <div class="code-panel">
+          <div class="code-header">
+            <div class="code-tabs">
+              <button class="code-tab active">HTML Snippet</button>
+            </div>
+            <button class="btn btn-primary" id="copy-code-btn" style="position: relative;">
+              <span id="copy-success" class="copy-success-tooltip">¡Copiado!</span>
+              Copiar Código
+            </button>
+          </div>
+          <div class="code-wrapper">
+            <pre><code id="code-output">Cargando código...</code></pre>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Script imports and configuration logic -->
+    <script type="module">
+      import { init } from "../dist/index.js";
+
+      // Global page states
+      let currentBgIndex = 0;
+      const backgrounds = [
+        { name: 'Negro', type: 'black', val: '#000000' },
+        { name: 'SVG', type: 'svg', val: '#050507' },
+        { name: 'Unsplash', type: 'unsplash', val: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80")' }
+      ];
+
+      // Quick presets values
+      const presets = {
+        'carnival': {
+          effects: ['glass', 'glow', 'ripple'],
+          shape: 'shape-card',
+          text: 'Folex',
+          color: '#ec4899',
+          intensity: 0.8,
+          speed: 1.5,
+          scale: 1.0,
+          density: 1.25,
+          glassBlur: 20,
+          glassSaturate: 220,
+          glassChroma: 0.8,
+          glassSpectrumSpeed: 2.0,
+          tint: 0.2,
+          layers: 4,
+          distort: 0.3,
+          field: 'turbulence',
+          blend: 'overlay',
+          pixieBounds: 'normal'
+        },
+        'neon-storm': {
+          effects: ['glow', 'ripple'],
+          shape: 'shape-orb',
+          text: '⚡',
+          color: '#06b6d4',
+          intensity: 0.9,
+          speed: 3.0,
+          scale: 1.0,
+          density: 1.5,
+          glassBlur: 12,
+          glassSaturate: 180,
+          glassChroma: 0.3,
+          glassSpectrumSpeed: 1.0,
+          tint: 0.15,
+          layers: 6,
+          distort: 0.5,
+          field: 'cellular',
+          blend: 'screen',
+          pixieBounds: 'normal'
+        },
+        'pixie-dust': {
+          effects: ['glow', 'pixie'],
+          shape: 'shape-card',
+          text: '✨ Mágico',
+          color: '#f59e0b',
+          intensity: 0.7,
+          speed: 1.2,
+          scale: 1.6,
+          density: 2.2,
+          glassBlur: 12,
+          glassSaturate: 180,
+          glassChroma: 0.3,
+          glassSpectrumSpeed: 1.0,
+          tint: 0.15,
+          layers: 1,
+          distort: 0.0,
+          field: 'turbulence',
+          blend: 'overlay',
+          pixieBounds: 'normal'
+        },
+        'frosted': {
+          effects: ['glass'],
+          shape: 'shape-card',
+          text: 'Frozen',
+          color: '#e0f2fe',
+          intensity: 0.45,
+          speed: 0.6,
+          scale: 1.0,
+          density: 1.25,
+          glassBlur: 30,
+          glassSaturate: 120,
+          glassChroma: 0.15,
+          glassSpectrumSpeed: 0.5,
+          tint: 0.05,
+          layers: 1,
+          distort: 0.0,
+          field: 'turbulence',
+          blend: 'overlay',
+          pixieBounds: 'normal'
+        },
+        'space-odyssey': {
+          effects: ['glass', 'glow', 'ripple', 'pixie'],
+          shape: 'shape-button',
+          text: 'Explorar',
+          color: '#6366f1',
+          intensity: 0.75,
+          speed: 1.8,
+          scale: 1.1,
+          density: 1.8,
+          glassBlur: 16,
+          glassSaturate: 200,
+          glassChroma: 0.7,
+          glassSpectrumSpeed: 1.5,
+          tint: 0.1,
+          layers: 5,
+          distort: 0.25,
+          field: 'turbulence',
+          blend: 'color-dodge',
+          pixieBounds: 'tight'
+        }
+      };
+
+      // Select DOM Elements
+      const bgContainer = document.getElementById('bg-container');
+      const bgSvgLayer = document.getElementById('bg-svg-layer');
+      const toggleBgBtn = document.getElementById('toggle-bg-btn');
+      const presetsSelect = document.getElementById('presets-select');
+
+      const chkGlass = document.getElementById('chk-glass');
+      const chkGlow = document.getElementById('chk-glow');
+      const chkRipple = document.getElementById('chk-ripple');
+      const chkPixie = document.getElementById('chk-pixie');
+
+      const lblGlass = document.getElementById('lbl-glass');
+      const lblGlow = document.getElementById('lbl-glow');
+      const lblRipple = document.getElementById('lbl-ripple');
+      const lblPixie = document.getElementById('lbl-pixie');
+
+      const shapeSelect = document.getElementById('shape-select');
+      const previewTextInput = document.getElementById('preview-text-input');
+
+      const inputColor = document.getElementById('input-color');
+      const inputIntensity = document.getElementById('input-intensity');
+      const inputSpeed = document.getElementById('input-speed');
+      const inputScale = document.getElementById('input-scale');
+      const inputDensity = document.getElementById('input-density');
+      const inputLayers = document.getElementById('input-layers');
+      const inputDistort = document.getElementById('input-distort');
+      const inputGlassBlur = document.getElementById('input-glass-blur');
+      const inputGlassSaturate = document.getElementById('input-glass-saturate');
+      const inputGlassChroma = document.getElementById('input-glass-chroma');
+      const inputGlassSpectrumSpeed = document.getElementById('input-glass-spectrum-speed');
+      const inputTint = document.getElementById('input-tint');
+      const inputField = document.getElementById('input-field');
+      const inputBlend = document.getElementById('input-blend');
+      const inputPixieBounds = document.getElementById('input-pixie-bounds');
+
+      const blockGlass = document.getElementById('block-glass');
+      const blockRipple = document.getElementById('block-ripple');
+      const blockPixie = document.getElementById('block-pixie');
+
+      const codeOutput = document.getElementById('code-output');
+      const copyCodeBtn = document.getElementById('copy-code-btn');
+      const copySuccess = document.getElementById('copy-success');
+
+      // Sync active state check box backgrounds visually
+      function updateCheckboxStyles() {
+        lblGlass.classList.toggle('active', chkGlass.checked);
+        lblGlow.classList.toggle('active', chkGlow.checked);
+        lblRipple.classList.toggle('active', chkRipple.checked);
+        lblPixie.classList.toggle('active', chkPixie.checked);
+
+        // Control Panel Option Blocks Dimming
+        blockGlass.classList.toggle('disabled', !chkGlass.checked);
+        blockRipple.classList.toggle('disabled', !chkRipple.checked);
+        blockPixie.classList.toggle('disabled', !chkPixie.checked);
+      }
+
+      // Read current values into a state object
+      function getSettingsState() {
+        const activeEffects = [];
+        if (chkGlass.checked) activeEffects.push('glass');
+        if (chkGlow.checked) activeEffects.push('glow');
+        if (chkRipple.checked) activeEffects.push('ripple');
+        if (chkPixie.checked) activeEffects.push('pixie');
+
+        return {
+          effects: activeEffects,
+          shape: shapeSelect.value,
+          text: previewTextInput.value,
+          variables: {
+            '--fx-color': inputColor.value,
+            '--fx-intensity': inputIntensity.value,
+            '--fx-speed': inputSpeed.value,
+            '--fx-scale': inputScale.value,
+            '--fx-density': inputDensity.value,
+            '--fx-layers': inputLayers.value,
+            '--fx-distort': inputDistort.value,
+            '--fx-blur': inputGlassBlur.value, // Used by core as fallback
+            '--fx-tint': inputTint.value,
+            '--fx-glass-blur': inputGlassBlur.value,
+            '--fx-glass-saturate': inputGlassSaturate.value,
+            '--fx-glass-chroma': inputGlassChroma.value,
+            '--fx-glass-spectrum-speed': inputGlassSpectrumSpeed.value,
+            '--fx-field': inputField.value,
+            '--fx-blend': inputBlend.value,
+            '--fx-pixie-bounds': inputPixieBounds.value
+          }
+        };
+      }
+
+      // Generate HTML code string
+      function generateCodeString(state) {
+        const fxVal = state.effects.join(' ');
+        let styleStr = `  --fx-color: ${state.variables['--fx-color']};\n`;
+        styleStr += `  --fx-intensity: ${state.variables['--fx-intensity']};\n`;
+        styleStr += `  --fx-speed: ${state.variables['--fx-speed']};\n`;
+
+        if (state.effects.includes('glass')) {
+          styleStr += `  --fx-glass-blur: ${state.variables['--fx-glass-blur']};\n`;
+          styleStr += `  --fx-glass-saturate: ${state.variables['--fx-glass-saturate']};\n`;
+          styleStr += `  --fx-glass-chroma: ${state.variables['--fx-glass-chroma']};\n`;
+          styleStr += `  --fx-glass-spectrum-speed: ${state.variables['--fx-glass-spectrum-speed']};\n`;
+          styleStr += `  --fx-tint: ${state.variables['--fx-tint']};\n`;
+        }
+
+        if (state.effects.includes('ripple')) {
+          styleStr += `  --fx-layers: ${state.variables['--fx-layers']};\n`;
+          styleStr += `  --fx-distort: ${state.variables['--fx-distort']};\n`;
+          styleStr += `  --fx-field: ${state.variables['--fx-field']};\n`;
+          styleStr += `  --fx-blend: ${state.variables['--fx-blend']};\n`;
+        }
+
+        if (state.effects.includes('pixie')) {
+          styleStr += `  --fx-density: ${state.variables['--fx-density']};\n`;
+          styleStr += `  --fx-scale: ${state.variables['--fx-scale']};\n`;
+          styleStr += `  --fx-pixie-bounds: ${state.variables['--fx-pixie-bounds']};\n`;
+        }
+
+        let elTag = 'div';
+        if (state.shape === 'shape-button') {
+          elTag = 'button';
+        }
+
+        return `<${elTag} data-folex="${fxVal}" style="\n${styleStr}">\n  ${state.text}\n</${elTag}>`;
+      }
+
+      // Update Preview Node and call Init
+      let renderThrottled = false;
+      function requestUpdate() {
+        if (renderThrottled) return;
+        renderThrottled = true;
+
+        requestAnimationFrame(() => {
+          updateCheckboxStyles();
+          const state = getSettingsState();
+
+          // Update text indicators beside sliders
+          document.getElementById('val-color').textContent = state.variables['--fx-color'];
+          document.getElementById('val-intensity').textContent = state.variables['--fx-intensity'];
+          document.getElementById('val-speed').textContent = state.variables['--fx-speed'];
+          document.getElementById('val-scale').textContent = state.variables['--fx-scale'];
+          document.getElementById('val-density').textContent = state.variables['--fx-density'];
+          document.getElementById('val-layers').textContent = state.variables['--fx-layers'];
+          document.getElementById('val-distort').textContent = state.variables['--fx-distort'];
+          document.getElementById('val-glass-blur').textContent = state.variables['--fx-glass-blur'];
+          document.getElementById('val-glass-saturate').textContent = state.variables['--fx-glass-saturate'] + '%';
+          document.getElementById('val-glass-chroma').textContent = state.variables['--fx-glass-chroma'];
+          document.getElementById('val-glass-spectrum-speed').textContent = state.variables['--fx-glass-spectrum-speed'];
+          document.getElementById('val-tint').textContent = state.variables['--fx-tint'];
+
+          // Create new preview DOM element to unregister old particle zones completely
+          const oldHost = document.getElementById('preview-element');
+          const parent = oldHost.parentNode;
+
+          let newHostTag = 'div';
+          if (state.shape === 'shape-button') {
+            newHostTag = 'button';
+          }
+
+          const newHost = document.createElement(newHostTag);
+          newHost.id = 'preview-element';
+          newHost.className = `preview-host ${state.shape}`;
+          newHost.textContent = state.text;
+
+          // In case shape is a button, disable standard border or customize it
+          if (state.shape === 'shape-button') {
+            newHost.style.border = '1px solid rgba(255,255,255,0.08)';
+            newHost.style.background = 'transparent';
+          }
+
+          // Apply FX settings style variables
+          newHost.setAttribute('data-folex', state.effects.join(' '));
+          for (const [key, val] of Object.entries(state.variables)) {
+            newHost.style.setProperty(key, val);
+          }
+
+          parent.replaceChild(newHost, oldHost);
+
+          // Trigger Folex library parsing
+          init();
+
+          // Generate code output
+          codeOutput.textContent = generateCodeString(state);
+
+          renderThrottled = false;
+        });
+      }
+
+      // Apply preset values
+      function applyPreset(key) {
+        const p = presets[key];
+        if (!p) return;
+
+        chkGlass.checked = p.effects.includes('glass');
+        chkGlow.checked = p.effects.includes('glow');
+        chkRipple.checked = p.effects.includes('ripple');
+        chkPixie.checked = p.effects.includes('pixie');
+
+        shapeSelect.value = p.shape;
+        previewTextInput.value = p.text;
+
+        inputColor.value = p.color;
+        inputIntensity.value = p.intensity;
+        inputSpeed.value = p.speed;
+        inputScale.value = p.scale;
+        inputDensity.value = p.density;
+        inputLayers.value = p.layers;
+        inputDistort.value = p.distort;
+        inputGlassBlur.value = p.glassBlur;
+        inputGlassSaturate.value = p.glassSaturate;
+        inputGlassChroma.value = p.glassChroma;
+        inputGlassSpectrumSpeed.value = p.glassSpectrumSpeed;
+        inputTint.value = p.tint;
+        inputField.value = p.field;
+        inputBlend.value = p.blend;
+        inputPixieBounds.value = p.pixieBounds;
+
+        requestUpdate();
+      }
+
+      // Event listener registration
+      const triggers = [
+        chkGlass, chkGlow, chkRipple, chkPixie,
+        shapeSelect, previewTextInput,
+        inputColor, inputIntensity, inputSpeed, inputScale, inputDensity,
+        inputLayers, inputDistort, inputGlassBlur, inputGlassSaturate,
+        inputGlassChroma, inputGlassSpectrumSpeed, inputTint,
+        inputField, inputBlend, inputPixieBounds
+      ];
+
+      for (const t of triggers) {
+        t.addEventListener('input', requestUpdate);
+        t.addEventListener('change', requestUpdate);
+      }
+
+      // Preset selection change listener
+      presetsSelect.addEventListener('change', (e) => {
+        applyPreset(e.target.value);
+      });
+
+      // Preset swatches click listeners
+      document.querySelectorAll('.swatch').forEach(sw => {
+        sw.addEventListener('click', (e) => {
+          inputColor.value = e.target.dataset.color;
+          requestUpdate();
+        });
+      });
+
+      // Background cycler logic
+      toggleBgBtn.addEventListener('click', () => {
+        currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
+        const currentBg = backgrounds[currentBgIndex];
+
+        toggleBgBtn.querySelector('span').textContent = `Fondo: ${currentBg.name}`;
+
+        if (currentBg.type === 'svg') {
+          bgContainer.style.background = currentBg.val;
+          bgSvgLayer.style.display = 'block';
+        } else {
+          bgSvgLayer.style.display = 'none';
+          if (currentBg.type === 'unsplash') {
+            bgContainer.style.background = currentBg.val;
+            bgContainer.style.backgroundSize = 'cover';
+            bgContainer.style.backgroundPosition = 'center';
+            bgContainer.style.backgroundAttachment = 'fixed';
+          } else {
+            // Black
+            bgContainer.style.background = currentBg.val;
+          }
+        }
+      });
+
+      // Copy to clipboard functionality
+      copyCodeBtn.addEventListener('click', () => {
+        const textToCopy = codeOutput.textContent;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          copySuccess.classList.add('show');
+          setTimeout(() => {
+            copySuccess.classList.remove('show');
+          }, 2000);
+        }).catch(err => {
+          console.error('No se pudo copiar el código: ', err);
+        });
+      });
+
+      // Initial execution
+      applyPreset('carnival');
+    </script>
+  </body>
+</html>

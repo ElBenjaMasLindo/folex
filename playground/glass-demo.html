@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Folex — Glass</title>
+    <link rel="stylesheet" href="../dist/folex.css" />
+    <style>
+      :root { color-scheme: dark; }
+      * { margin: 0; box-sizing: border-box; }
+      body {
+        min-height: 100vh;
+        display: grid; place-items: start center;
+        gap: 32px; padding: 48px;
+        background: radial-gradient(circle at 30% 20%, #1a1430, #06070d 70%);
+        font: 16px/1.4 system-ui, sans-serif; color: #e7e3f1;
+        transition: background 0.4s ease;
+      }
+      h1, h2 { margin: 0; font-weight: 600; text-align: center; }
+      h1 { font-size: 24px; opacity: 0.9; }
+      h2 { font-size: 13px; opacity: 0.55; letter-spacing: 0.04em; text-transform: uppercase; margin-top: -16px; }
+
+      .section-title {
+        font-size: 14px; opacity: 0.7; letter-spacing: 0.08em; text-transform: uppercase;
+        margin-top: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 1200px;
+        padding-bottom: 8px; text-align: left;
+      }
+
+      .stage { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 48px 40px; width: 100%; max-width: 1200px; }
+      .demo { display: grid; place-items: center; gap: 10px; }
+      .demo small { opacity: 0.6; font-size: 12px; text-align: center; }
+
+      .card {
+        width: 280px; height: 180px; border-radius: 24px;
+        display: grid; place-items: center;
+        font-weight: 600; font-size: 14px; text-align: center;
+        padding: 20px;
+      }
+      .orb {
+        width: 160px; height: 160px; border-radius: 50%;
+        display: grid; place-items: center; font-size: 32px;
+      }
+
+      .buttons-container {
+        display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+        width: 100%; max-width: 1200px;
+        padding: 24px 0;
+      }
+
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 14px 32px; border-radius: 16px;
+        font-weight: 600; font-size: 14px; text-decoration: none;
+        color: #fff; cursor: pointer; border: none;
+        background: transparent;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      /* Toggle background button style */
+      #toggle-bg {
+        position: fixed; top: 20px; right: 20px; z-index: 100;
+        padding: 10px 20px; border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: white; font-weight: 500; font-size: 13px;
+        cursor: pointer; backdrop-filter: blur(16px);
+        transition: background 0.2s, border-color 0.2s;
+      }
+      #toggle-bg:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Colorful background shapes for the backdrop-filter to refract */
+      .bg-art {
+        position: fixed; inset: 0; z-index: -1; overflow: hidden;
+        pointer-events: none;
+      }
+      .bg-art div {
+        position: absolute; border-radius: 50%;
+        filter: blur(80px); opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="toggle-bg">Fondo: Vectorial</button>
+
+    <div class="bg-art">
+      <div style="width:420px;height:420px;background:#ff6b6b;top:5%;left:8%"></div>
+      <div style="width:350px;height:350px;background:#feca57;top:55%;left:25%"></div>
+      <div style="width:300px;height:300px;background:#48dbfb;top:15%;right:12%"></div>
+      <div style="width:450px;height:450px;background:#ff9ff3;bottom:5%;right:18%"></div>
+      <div style="width:260px;height:260px;background:#55efc4;top:45%;left:55%"></div>
+      <div style="width:320px;height:320px;background:#a29bfe;top:70%;left:5%"></div>
+    </div>
+
+    <h1>Glass Playground</h1>
+    <h2>carnival chromatic refraction</h2>
+
+    <h3 class="section-title">Componentes (Botones)</h3>
+    <div class="buttons-container">
+      <button class="btn" data-folex="glass glow" style="--fx-color: #3b82f6">
+        Blue Button
+      </button>
+      <button class="btn" data-folex="glass glow" style="--fx-color: #10b981">
+        Green Button
+      </button>
+      <button class="btn" data-folex="glass glow" style="--fx-color: #ec4899">
+        Pink Button
+      </button>
+      <button class="btn" data-folex="glass pixie" style="--fx-color: #f59e0b">
+        Gold Pixie Button
+      </button>
+      <button class="btn" data-folex="glass glow pixie" style="--fx-color: #a78bfa">
+        Purple Star
+      </button>
+    </div>
+
+    <h3 class="section-title">Contenedores (Tarjetas)</h3>
+    <div class="stage">
+      <div class="demo">
+        <div class="card" data-folex="glass" style="--fx-color: #7c3aed">
+          Purple Glass
+        </div>
+        <small>glass only</small>
+      </div>
+
+      <div class="demo">
+        <div class="card" data-folex="glass glow" style="--fx-color: #3b82f6">
+          Blue Glass + Glow
+        </div>
+        <small>glass + glow</small>
+      </div>
+
+      <div class="demo">
+        <div class="card" data-folex="glass pixie" style="--fx-color: #f59e0b; --fx-pixie-bounds: tight">
+          Gold Glass + Pixie
+        </div>
+        <small>glass + pixie · tight bounds</small>
+      </div>
+
+      <div class="demo">
+        <div class="card" data-folex="glass ripple glow" style="--fx-color: #ec4899; --fx-layers: 3">
+          Pink Carnival
+        </div>
+        <small>glass + ripple + glow</small>
+      </div>
+
+      <div class="demo">
+        <div class="orb" data-folex="glass glow pixie" style="--fx-color: #10b981">
+          ✨
+        </div>
+        <small>orb · glass + glow + pixie</small>
+      </div>
+
+      <div class="demo">
+        <div class="card" data-folex="glass" style="--fx-color: #ef4444; --fx-glass-chroma: 0.8; --fx-intensity: 0.9">
+          Maximum Chroma
+        </div>
+        <small>chroma: 0.8 · intensity: 0.9</small>
+      </div>
+
+      <div class="demo">
+        <div class="card" data-folex="glass" style="--fx-color: #06b6d4; --fx-glass-spectrum-speed: 3">
+          Fast Spectrum
+        </div>
+        <small>spectrum speed: 3</small>
+      </div>
+
+      <div class="demo">
+        <div class="card" data-folex="glass" style="--fx-color: #8b5cf6; --fx-glass-blur: 30; --fx-glass-saturate: 250">
+          Deep Frost
+        </div>
+        <small>blur: 30 · saturate: 250</small>
+      </div>
+    </div>
+
+    <script type="module">
+      import { init } from "../dist/index.js";
+      init();
+
+      // Background Toggle Logic
+      const toggleBtn = document.getElementById('toggle-bg');
+      let bgIndex = 0;
+      const bgs = [
+        {
+          name: 'Vectorial',
+          value: 'radial-gradient(circle at 30% 20%, #1a1430, #06070d 70%)',
+          showArt: true
+        },
+        {
+          name: 'Unsplash: Fluid Art',
+          value: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80")',
+          showArt: false
+        },
+        {
+          name: 'Unsplash: Abstract Dark',
+          value: 'url("https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1920&q=80")',
+          showArt: false
+        }
+      ];
+
+      toggleBtn.addEventListener('click', () => {
+        bgIndex = (bgIndex + 1) % bgs.length;
+        const current = bgs[bgIndex];
+
+        toggleBtn.textContent = `Fondo: ${current.name}`;
+        document.body.style.background = current.value;
+
+        if (!current.showArt) {
+          document.body.style.backgroundSize = 'cover';
+          document.body.style.backgroundPosition = 'center';
+          document.body.style.backgroundAttachment = 'fixed';
+          document.querySelector('.bg-art').style.display = 'none';
+        } else {
+          document.body.style.backgroundAttachment = 'scroll';
+          document.querySelector('.bg-art').style.display = 'block';
+        }
+      });
+    </script>
+  </body>
+</html>
