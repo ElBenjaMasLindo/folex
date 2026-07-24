@@ -9,7 +9,7 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
   const hoverScale = vars.tiltScale;
   const speed = vars.tiltSpeed;
   const stiffness = 120 * speed;
-  const damping = 8;
+  const damping = 6.13 * Math.sqrt(speed);
 
   ensurePointerListeners();
 
@@ -78,7 +78,11 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
   host.addEventListener(
     "pointerleave",
     () => {
-      hovering = false;
+      if (hovering) {
+        hovering = false;
+        velX -= rotX * 1.5 * Math.sqrt(speed);
+        velY -= rotY * 1.5 * Math.sqrt(speed);
+      }
     },
     { passive: true },
   );
