@@ -9,7 +9,7 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
   const hoverScale = vars.tiltScale;
   const speed = vars.tiltSpeed;
   const stiffness = 120 * speed;
-  const damping = 6.13 * Math.sqrt(speed);
+  const damping = 4.38 * Math.sqrt(speed);
 
   ensurePointerListeners();
 
@@ -42,7 +42,7 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
 
     [rotX, velX] = springStep(rotX, velX, tRotX, stiffness, damping, dt);
     [rotY, velY] = springStep(rotY, velY, tRotY, stiffness, damping, dt);
-    [sc, scVel] = springStep(sc, scVel, tSc, 200 * speed, 14, dt);
+    [sc, scVel] = springStep(sc, scVel, tSc, 200 * speed, 10, dt);
 
     host.style.transform = `perspective(${perspective}px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(${sc.toFixed(4)},${sc.toFixed(4)},1)`;
 
@@ -80,8 +80,8 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
     () => {
       if (hovering) {
         hovering = false;
-        velX -= rotX * 1.5 * Math.sqrt(speed);
-        velY -= rotY * 1.5 * Math.sqrt(speed);
+        velX -= rotX * 2.0 * Math.sqrt(speed);
+        velY -= rotY * 2.0 * Math.sqrt(speed);
       }
     },
     { passive: true },
