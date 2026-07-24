@@ -9,7 +9,7 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
   const hoverScale = vars.tiltScale;
   const speed = vars.tiltSpeed;
   const stiffness = 120 * speed;
-  const damping = 12;
+  const damping = 8;
 
   ensurePointerListeners();
 
@@ -42,16 +42,17 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
 
     [rotX, velX] = springStep(rotX, velX, tRotX, stiffness, damping, dt);
     [rotY, velY] = springStep(rotY, velY, tRotY, stiffness, damping, dt);
-    [sc, scVel] = springStep(sc, scVel, tSc, 200 * speed, 20, dt);
+    [sc, scVel] = springStep(sc, scVel, tSc, 200 * speed, 14, dt);
 
     host.style.transform = `perspective(${perspective}px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(${sc.toFixed(4)},${sc.toFixed(4)},1)`;
 
     const atRest =
-      springAtRest(rotX, velX, tRotX) &&
-      springAtRest(rotY, velY, tRotY) &&
-      springAtRest(sc, scVel, tSc);
+      springAtRest(rotX, velX, tRotX, 0.001) &&
+      springAtRest(rotY, velY, tRotY, 0.001) &&
+      springAtRest(sc, scVel, tSc, 0.0001);
 
     if (atRest && !hovering) {
+      host.style.transform = "";
       registered = false;
       return false;
     }
