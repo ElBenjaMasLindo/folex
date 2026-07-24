@@ -1,10 +1,14 @@
 # Folex (folex-fx)
 
+[![CI](https://github.com/ElBenjaMasLindo/folex/actions/workflows/ci.yml/badge.svg)](https://github.com/ElBenjaMasLindo/folex/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/folex-fx.svg)](https://www.npmjs.com/package/folex-fx)
+[![license](https://img.shields.io/github/license/ElBenjaMasLindo/folex.svg)](LICENSE)
+
 Lightweight, zero-dependency visual effects library for plain HTML. Glass morphism, glow, ripple, and particle effects driven entirely by CSS custom properties — no JavaScript configuration required.
 
 ```html
 <div data-folex="glass glow" style="--fx-color: #7c3aed; --fx-speed: 1.2">
-  ✨ hover me
+  ✨ see me
 </div>
 ```
 
@@ -181,3 +185,11 @@ SemVer. 0.x releases may include breaking changes in minor versions. Stability n
 ## License
 
 MIT
+
+## Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Clone the repository and install dependencies with `pnpm install`.
+2. Run `pnpm test` and `pnpm lint` before submitting a pull request.
+3. Keep changes minimal and focused. See [AGENTS.md](AGENTS.md) for internal architecture invariants and design directives.
