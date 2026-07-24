@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Badges (CI status, npm version, license) and Contributing section in `README.md`
 - Developer & AI agent directives (`AGENTS.md`)
 
+### Fixed
+
+- CI workflow trigger target branch from `main` to `master`
+
 ## [0.1.0] - 2026-07-22
 
 ### Added

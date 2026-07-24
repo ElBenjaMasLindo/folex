@@ -69,14 +69,16 @@ describe("resolveVars — pixie bounds", () => {
     el.remove();
   });
 
-  it.each(["loose", "normal", "tight", "strict"] as const)(
-    "accepts %s as a valid --fx-pixie-bounds value",
-    (level) => {
-      const el = makeHost(`--fx-pixie-bounds: ${level}`);
-      expect(resolveVars(el).bounds).toBe(level);
-      el.remove();
-    },
-  );
+  it.each([
+    "loose",
+    "normal",
+    "tight",
+    "strict",
+  ] as const)("accepts %s as a valid --fx-pixie-bounds value", (level) => {
+    const el = makeHost(`--fx-pixie-bounds: ${level}`);
+    expect(resolveVars(el).bounds).toBe(level);
+    el.remove();
+  });
 
   it("falls back to normal on garbage values", () => {
     const el = makeHost("--fx-pixie-bounds: bananas");

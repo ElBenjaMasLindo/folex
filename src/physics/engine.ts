@@ -1,8 +1,7 @@
 type PhysicsTickFn = (dt: number) => boolean;
 
 const reducedMotion =
-  typeof matchMedia !== "undefined" &&
-  matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 class PhysicsEngine {
   private ticks = new Set<PhysicsTickFn>();
