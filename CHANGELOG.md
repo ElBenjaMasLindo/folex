@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Developer & AI agent directives (`AGENTS.md`)
 - Ignore `.notes/` directory for local plans in `.gitignore`
 
+### Changed
+
+- Updated `AGENTS.md` meta-rules with mandatory feature branching workflow (`feature/<name>`, `fix/<name>`) for major changes before merging to `master`
+
 ### Fixed
 
 - CI workflow trigger target branch from `main` to `master`

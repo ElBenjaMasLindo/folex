@@ -36,6 +36,7 @@ Compliance with these rules is non-negotiable in folex (`folex-fx`) development.
 - **No Speculative Abstractions**: Do not introduce base classes, unused interfaces, plugin hooks, or state managers "just in case". Implement only what is explicitly needed.
 - **Global Singletons Only**: Any new observer or browser listener must be registered as a single global instance in `engine.ts` or `orchestrator.ts`, never per host element.
 - **Testing Enforcement**: Any modification to `src/core/` or `src/particles/` MUST be verified by running and updating tests in `tests/` (`vitest`). Never declare completion with failing tests.
+- **Feature Branching Workflow**: Major modifications, new effects (e.g. `feature/tilt-effect`), or non-trivial architectural changes MUST be isolated on dedicated feature/fix branches (`feature/<name>`, `fix/<name>`). Fully verify tests and build quality before merging back into `master`.
 - **Code Comments**: Do not narrate what code does. Only comment to explain *why* a non-obvious decision was made. Keep inline comments minimal, technical, and single-line.
 - **Conventional Commits**: Commit messages must follow the Conventional Commits format (lowercase type, concise imperative description, e.g. `feat: add glass effect`).
 - **Package Safety & Lockfile**: Pin exact versions. Never modify or regenerate `pnpm-lock.yaml` without explicit consent.
