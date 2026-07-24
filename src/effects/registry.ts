@@ -3,6 +3,7 @@ import * as glass from "./glass";
 import * as glow from "./glow";
 import * as pixie from "./pixie";
 import * as ripple from "./ripple";
+import * as tilt from "./tilt";
 
 export type EffectName = string;
 export type EffectSetup = (host: HTMLElement, vars: ResolvedVars) => void;
@@ -13,4 +14,5 @@ export const registry: EffectRegistry = {
   glow: glow.setup,
   ripple: ripple.setup,
   pixie: pixie.setup,
+  tilt: tilt.setup,
 };
