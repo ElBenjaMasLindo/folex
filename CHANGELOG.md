@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `tilt` effect — 3D perspective tilt on hover with sub-damped elastic spring return ($\zeta = 0.20$) and release velocity impulse
+- Physics suite (`src/physics/`) — semi-implicit Euler spring solver (`spring.ts`), global pointer listener (`pointer.ts`), and auto-suspending rAF loop (`engine.ts`)
+- Configurable custom properties: `--fx-tilt-max`, `--fx-tilt-perspective`, `--fx-tilt-scale`, `--fx-tilt-speed`
 - GitHub Actions CI workflow (`.github/workflows/ci.yml`) for linting, typechecking, building, and running tests
 - Badges (CI status, npm version, license) and Contributing section in `README.md`
 - Developer & AI agent directives (`AGENTS.md`)
