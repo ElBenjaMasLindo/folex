@@ -563,6 +563,11 @@
               <div class="effect-checkbox-indicator"></div>
               <span class="control-label">Pixie</span>
             </label>
+            <label class="effect-checkbox" id="lbl-tilt">
+              <input type="checkbox" id="chk-tilt" checked />
+              <div class="effect-checkbox-indicator"></div>
+              <span class="control-label">Tilt 3D</span>
+            </label>
           </div>
         </div>
 
@@ -884,11 +889,13 @@
       const chkGlow = document.getElementById('chk-glow');
       const chkRipple = document.getElementById('chk-ripple');
       const chkPixie = document.getElementById('chk-pixie');
+      const chkTilt = document.getElementById('chk-tilt');
 
       const lblGlass = document.getElementById('lbl-glass');
       const lblGlow = document.getElementById('lbl-glow');
       const lblRipple = document.getElementById('lbl-ripple');
       const lblPixie = document.getElementById('lbl-pixie');
+      const lblTilt = document.getElementById('lbl-tilt');
 
       const shapeSelect = document.getElementById('shape-select');
       const previewTextInput = document.getElementById('preview-text-input');
@@ -923,6 +930,7 @@
         lblGlow.classList.toggle('active', chkGlow.checked);
         lblRipple.classList.toggle('active', chkRipple.checked);
         lblPixie.classList.toggle('active', chkPixie.checked);
+        lblTilt.classList.toggle('active', chkTilt.checked);
 
         // Control Panel Option Blocks Dimming
         blockGlass.classList.toggle('disabled', !chkGlass.checked);
@@ -937,6 +945,7 @@
         if (chkGlow.checked) activeEffects.push('glow');
         if (chkRipple.checked) activeEffects.push('ripple');
         if (chkPixie.checked) activeEffects.push('pixie');
+        if (chkTilt.checked) activeEffects.push('tilt');
 
         return {
           effects: activeEffects,
@@ -1070,6 +1079,7 @@
         chkGlow.checked = p.effects.includes('glow');
         chkRipple.checked = p.effects.includes('ripple');
         chkPixie.checked = p.effects.includes('pixie');
+        chkTilt.checked = p.effects.includes('tilt');
 
         shapeSelect.value = p.shape;
         previewTextInput.value = p.text;
@@ -1095,7 +1105,7 @@
 
       // Event listener registration
       const triggers = [
-        chkGlass, chkGlow, chkRipple, chkPixie,
+        chkGlass, chkGlow, chkRipple, chkPixie, chkTilt,
         shapeSelect, previewTextInput,
         inputColor, inputIntensity, inputSpeed, inputScale, inputDensity,
         inputLayers, inputDistort, inputGlassBlur, inputGlassSaturate,

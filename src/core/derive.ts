@@ -30,6 +30,10 @@ export interface ResolvedVars {
   glassSaturate: number;
   glassChroma: number;
   glassSpectrumSpeed: number;
+  tiltMax: number;
+  tiltPerspective: number;
+  tiltScale: number;
+  tiltSpeed: number;
 }
 
 const FALLBACK_COLOR = "#ffb37c";
@@ -64,6 +68,15 @@ const TABLE: Row<number>[] = [
     validate: numberInRange(0.1, 5),
     fallback: 1,
   },
+  { prop: "--fx-tilt-max", key: "tiltMax", validate: numberInRange(1, 45), fallback: 15 },
+  {
+    prop: "--fx-tilt-perspective",
+    key: "tiltPerspective",
+    validate: numberInRange(200, 2000),
+    fallback: 800,
+  },
+  { prop: "--fx-tilt-scale", key: "tiltScale", validate: numberInRange(1, 1.15), fallback: 1.05 },
+  { prop: "--fx-tilt-speed", key: "tiltSpeed", validate: numberInRange(0.1, 5), fallback: 1 },
 ];
 
 const FIELD_VALUES = ["turbulence", "cellular"] as const;
@@ -120,6 +133,10 @@ export function resolveVars(host: HTMLElement): ResolvedVars {
     glassSaturate: 180,
     glassChroma: 0.3,
     glassSpectrumSpeed: 1,
+    tiltMax: 15,
+    tiltPerspective: 800,
+    tiltScale: 1.05,
+    tiltSpeed: 1,
   };
 
   for (const row of TABLE) {
