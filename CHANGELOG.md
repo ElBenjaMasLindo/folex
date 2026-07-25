@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Project backlog tracking file (`TODO.md`) documenting known `tilt`/`glass`/`pixie` issues and planned features
+
 ## [0.3.0] - 2026-07-24
 
 ### Changed
