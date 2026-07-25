@@ -26,10 +26,10 @@ function mockVars(overrides?: Partial<ResolvedVars>): ResolvedVars {
     glassChroma: 0.3,
     glassSpectrumSpeed: 1,
     glassTint: 0.15,
-    tiltMax: 15,
-    tiltPerspective: 1000,
-    tiltScale: 1,
-    tiltSpeed: 1,
+    expTiltMax: 15,
+    expTiltPerspective: 1000,
+    expTiltScale: 1,
+    expTiltSpeed: 1,
     ...overrides,
   };
 }

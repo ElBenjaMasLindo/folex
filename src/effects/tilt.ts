@@ -4,10 +4,10 @@ import { ensurePointerListeners, getPointer } from "../physics/pointer";
 import { springAtRest, springStep } from "../physics/spring";
 
 export function setup(host: HTMLElement, vars: ResolvedVars): void {
-  const tiltMax = vars.tiltMax;
-  const perspective = vars.tiltPerspective;
-  const hoverScale = vars.tiltScale;
-  const speed = vars.tiltSpeed;
+  const tiltMax = vars.expTiltMax;
+  const perspective = vars.expTiltPerspective;
+  const hoverScale = vars.expTiltScale;
+  const speed = vars.expTiltSpeed;
   const stiffness = 120 * speed;
   const damping = 4.38 * Math.sqrt(speed);
 

@@ -133,10 +133,10 @@ All configuration via `--fx-*` properties on the host element. Every property ha
 | `--fx-glass-chroma` | glass | number | `0.3` | `0`–`1` |
 | `--fx-glass-spectrum-speed` | glass | number | `1` | `0.1`–`5` |
 | `--fx-glass-tint` | glass | number | `0.15` | `0`–`1` |
-| `--fx-tilt-max` | tilt | number | `15` | `1`–`45` |
-| `--fx-tilt-perspective` | tilt | number | `800` | `200`–`2000` |
-| `--fx-tilt-scale` | tilt | number | `1.05` | `1`–`1.15` |
-| `--fx-tilt-speed` | tilt | number | `1` | `0.1`–`5` |
+| `--fx-exp-tilt-max` | exp-tilt | number | `15` | `1`–`45` |
+| `--fx-exp-tilt-perspective` | exp-tilt | number | `800` | `200`–`2000` |
+| `--fx-exp-tilt-scale` | exp-tilt | number | `1.05` | `1`–`1.15` |
+| `--fx-exp-tilt-speed` | exp-tilt | number | `1` | `0.1`–`5` |
 
 ## API
 

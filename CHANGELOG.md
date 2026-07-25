@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Project backlog tracking file (`TODO.md`) documenting known `tilt`/`glass`/`pixie` issues and planned features
 
+### Changed
+
+- Renamed `tilt` effect to `exp-tilt` and updated CSS custom properties to `--fx-exp-tilt-*` to denote experimental status.
+
 ## [0.3.0] - 2026-07-24
 
 ### Changed

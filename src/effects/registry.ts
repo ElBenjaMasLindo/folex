@@ -14,5 +14,5 @@ export const registry: EffectRegistry = {
   glow: glow.setup,
   ripple: ripple.setup,
   pixie: pixie.setup,
-  tilt: tilt.setup,
+  "exp-tilt": tilt.setup,
 };

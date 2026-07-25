@@ -30,6 +30,10 @@ describe("resolveVars — validation table defaults", () => {
     expect(v.rippleBlur).toBe(12);
     expect(v.rippleTint).toBe(0.15);
     expect(v.pixieBounds).toBe("normal");
+    expect(v.expTiltMax).toBe(15);
+    expect(v.expTiltPerspective).toBe(800);
+    expect(v.expTiltScale).toBe(1.05);
+    expect(v.expTiltSpeed).toBe(1);
     el.remove();
   });
 

@@ -945,7 +945,7 @@
         if (chkGlow.checked) activeEffects.push('glow');
         if (chkRipple.checked) activeEffects.push('ripple');
         if (chkPixie.checked) activeEffects.push('pixie');
-        if (chkTilt.checked) activeEffects.push('tilt');
+        if (chkTilt.checked) activeEffects.push('exp-tilt');
 
         return {
           effects: activeEffects,
@@ -1084,7 +1084,7 @@
         chkGlow.checked = p.effects.includes('glow');
         chkRipple.checked = p.effects.includes('ripple');
         chkPixie.checked = p.effects.includes('pixie');
-        chkTilt.checked = p.effects.includes('tilt');
+        chkTilt.checked = p.effects.includes('exp-tilt');
 
         shapeSelect.value = p.shape;
         previewTextInput.value = p.text;

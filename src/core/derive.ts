@@ -35,10 +35,10 @@ export interface ResolvedVars {
   glassChroma: number;
   glassSpectrumSpeed: number;
   glassTint: number;
-  tiltMax: number;
-  tiltPerspective: number;
-  tiltScale: number;
-  tiltSpeed: number;
+  expTiltMax: number;
+  expTiltPerspective: number;
+  expTiltScale: number;
+  expTiltSpeed: number;
 }
 
 const FALLBACK_COLOR = "#ffb37c";
@@ -100,15 +100,15 @@ const TABLE: Row<number>[] = [
     fallback: 1,
   },
   { prop: "--fx-glass-tint", key: "glassTint", validate: numberInRange(0, 1), fallback: 0.15 },
-  { prop: "--fx-tilt-max", key: "tiltMax", validate: numberInRange(1, 45), fallback: 15 },
+  { prop: "--fx-exp-tilt-max", key: "expTiltMax", validate: numberInRange(1, 45), fallback: 15 },
   {
-    prop: "--fx-tilt-perspective",
-    key: "tiltPerspective",
+    prop: "--fx-exp-tilt-perspective",
+    key: "expTiltPerspective",
     validate: numberInRange(200, 2000),
     fallback: 800,
   },
-  { prop: "--fx-tilt-scale", key: "tiltScale", validate: numberInRange(1, 1.15), fallback: 1.05 },
-  { prop: "--fx-tilt-speed", key: "tiltSpeed", validate: numberInRange(0.1, 5), fallback: 1 },
+  { prop: "--fx-exp-tilt-scale", key: "expTiltScale", validate: numberInRange(1, 1.15), fallback: 1.05 },
+  { prop: "--fx-exp-tilt-speed", key: "expTiltSpeed", validate: numberInRange(0.1, 5), fallback: 1 },
 ];
 
 const FIELD_VALUES = ["turbulence", "cellular"] as const;
@@ -170,10 +170,10 @@ export function resolveVars(host: HTMLElement): ResolvedVars {
     glassChroma: 0.3,
     glassSpectrumSpeed: 1,
     glassTint: 0.15,
-    tiltMax: 15,
-    tiltPerspective: 800,
-    tiltScale: 1.05,
-    tiltSpeed: 1,
+    expTiltMax: 15,
+    expTiltPerspective: 800,
+    expTiltScale: 1.05,
+    expTiltSpeed: 1,
   };
 
   for (const row of TABLE) {
