@@ -22,8 +22,8 @@ function tintedTexture(vars: ResolvedVars, seed: number): string {
   const ctx = tintCanvas.getContext("2d");
   if (!ctx) return "";
   const tex =
-    vars.field === "cellular"
-      ? cellularNoiseTexture(size, seed, vars.density)
+    vars.rippleField === "cellular"
+      ? cellularNoiseTexture(size, seed, vars.rippleScale)
       : valueNoiseTexture(size, seed, 2);
   ctx.putImageData(tex, 0, 0);
   ctx.globalCompositeOperation = "multiply";
@@ -38,9 +38,9 @@ function tintedTexture(vars: ResolvedVars, seed: number): string {
 
 export function setup(host: HTMLElement, vars: ResolvedVars): void {
   const hostId = nextId();
-  const layers = Math.max(1, Math.min(12, Math.round(vars.layers)));
+  const layers = Math.max(1, Math.min(12, Math.round(vars.rippleLayers)));
   const span = 6 / Math.max(0.1, vars.speed);
-  const layerOpacity = layerOpacityFor(vars.intensity, layers);
+  const layerOpacity = layerOpacityFor(vars.rippleIntensity, layers);
   const clip = document.createElement("div");
   clip.className = "fx-ripple-clip";
   for (let i = 0; i < layers; i++) {
@@ -48,10 +48,10 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
     const layer = document.createElement("div");
     layer.className = "fx-layer fx-ripple";
     if (url) layer.style.backgroundImage = `url(${url})`;
-    layer.style.mixBlendMode = vars.blend;
+    layer.style.mixBlendMode = vars.rippleBlend;
     const frac = layers > 1 ? i / (layers - 1) : 0;
     const dur = span * (0.8 + 0.5 * frac);
-    layer.style.setProperty("--fx-dur", `${dur.toFixed(2)}s`);
+    layer.style.setProperty("--fx-ripple-dur", `${dur.toFixed(2)}s`);
     layer.style.animationName = "fx-ripple-drift";
     layer.style.animationDelay = `${(-(frac * span) / 2).toFixed(2)}s`;
     layer.style.animationTimingFunction = "ease-in-out";

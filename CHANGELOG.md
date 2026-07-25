@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated `AGENTS.md` meta-rules with mandatory feature branching workflow (`feature/<name>`, `fix/<name>`) for major changes before merging to `master`
+- Refactored CSS custom property names (`--fx-*`): effect-specific properties now explicitly require effect prefixes (e.g., `--fx-glow-intensity`, `--fx-ripple-layers`, `--fx-pixie-density`), leaving only global properties (`--fx-color`, `--fx-speed`) without an effect prefix
 
 ### Fixed
 

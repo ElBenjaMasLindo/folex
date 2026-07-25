@@ -162,7 +162,7 @@ class ParticleEngine {
       const ageOffset = zone.momentum > 2 ? Math.min(0.25, zone.momentum / 60) : undefined;
 
       const cap = TIER_CAPS[this.tier];
-      const want = cap.emission * zone.vars.density * dt * moveBoost;
+      const want = cap.emission * zone.vars.pixieDensity * dt * moveBoost;
       let n = Math.floor(want);
       if (Math.random() < want - n) n += 1;
       for (let i = 0; i < n; i++) this.spawn(zone.vars, zone.rect, ageOffset);
@@ -190,7 +190,7 @@ class ParticleEngine {
 
   private spawn(vars: ResolvedVars, rect: DOMRect, initialLifeFrac?: number): void {
     if (!this.pool) return;
-    const size = Math.max(MIN_SIZE, Math.round(8 * vars.scale));
+    const size = Math.max(MIN_SIZE, Math.round(8 * vars.pixieScale));
     const life = 1.5 + Math.random() * 2.0;
     const startLife = initialLifeFrac !== undefined ? life * (1 - initialLifeFrac) : life;
     const px = rect.left + Math.random() * rect.width;
@@ -236,7 +236,7 @@ class ParticleEngine {
       driftAmp: 4 + Math.random() * 8,
       driftFreq: 0.5 + Math.random() * 1.5,
       hue: idx,
-      bounds: vars.bounds,
+      bounds: vars.pixieBounds,
       kind,
       rotation: Math.random() * Math.PI * 2,
       angularVelocity: behavior.spin(Math.random()),
@@ -246,7 +246,7 @@ class ParticleEngine {
   private entryBurst(zone: Zone): void {
     const cap = TIER_CAPS[this.tier];
     const avgLife = 2.5;
-    const steadyCount = cap.emission * zone.vars.density * avgLife;
+    const steadyCount = cap.emission * zone.vars.pixieDensity * avgLife;
     const burstCount = Math.floor(steadyCount * 0.85);
     for (let i = 0; i < burstCount; i++) {
       const initialLifeFrac = 0.7 + Math.random() * 0.25;

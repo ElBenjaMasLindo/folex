@@ -86,12 +86,12 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
   clip.style.setProperty("--fx-glass-frost-sat", `${vars.glassSaturate}%`);
   clip.style.setProperty(
     "--fx-glass-frost-shadow",
-    `inset 0 0 40px color-mix(in oklch, ${vars.color} ${Math.round(vars.tint * 100)}%, transparent)`,
+    `inset 0 0 40px color-mix(in oklch, ${vars.color} ${Math.round(vars.glassTint * 100)}%, transparent)`,
   );
   clip.style.setProperty("--fx-glass-spectrum-bg", `linear-gradient(135deg, ${gradientStops})`);
-  clip.style.setProperty("--fx-glass-spectrum-op", String(vars.intensity * 0.4));
+  clip.style.setProperty("--fx-glass-spectrum-op", String(vars.glassIntensity * 0.4));
   clip.style.setProperty("--fx-glass-spectrum-dur", `${specDur.toFixed(2)}s`);
-  clip.style.setProperty("--fx-glass-chroma-op", String(vars.intensity * vars.glassChroma));
+  clip.style.setProperty("--fx-glass-chroma-op", String(vars.glassIntensity * vars.glassChroma));
   clip.style.setProperty("--fx-glass-chroma-c1", chromaC1);
   clip.style.setProperty("--fx-glass-chroma-c2", chromaC2);
 

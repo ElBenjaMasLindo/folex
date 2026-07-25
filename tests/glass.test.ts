@@ -6,21 +6,26 @@ function mockVars(overrides?: Partial<ResolvedVars>): ResolvedVars {
   return {
     color: "#7c3aed",
     radius: "12px",
-    intensity: 0.6,
     speed: 1,
-    scale: 1,
-    density: 1.25,
-    layers: 1,
-    field: "turbulence",
-    blend: "overlay",
-    distort: 0,
-    blur: 12,
-    tint: 0.15,
-    bounds: "normal",
+    glowIntensity: 0.6,
+    glowBlend: "overlay",
+    rippleIntensity: 0.6,
+    rippleScale: 1,
+    rippleLayers: 1,
+    rippleField: "turbulence",
+    rippleBlend: "overlay",
+    rippleDistort: 0,
+    rippleBlur: 12,
+    rippleTint: 0.15,
+    pixieDensity: 1.25,
+    pixieBounds: "normal",
+    pixieScale: 1,
+    glassIntensity: 0.6,
     glassBlur: 12,
     glassSaturate: 180,
     glassChroma: 0.3,
     glassSpectrumSpeed: 1,
+    glassTint: 0.15,
     tiltMax: 15,
     tiltPerspective: 1000,
     tiltScale: 1,
@@ -65,7 +70,7 @@ describe("glass effect", () => {
   it("sets frost inner shadow variable with color-mix", () => {
     const host = document.createElement("div");
     document.body.appendChild(host);
-    setup(host, mockVars({ color: "#ff0000", tint: 0.25 }));
+    setup(host, mockVars({ color: "#ff0000", glassTint: 0.25 }));
     const clip = host.querySelector(".fx-glass-clip") as HTMLElement;
     const frostShadow = clip.style.getPropertyValue("--fx-glass-frost-shadow");
     expect(frostShadow).toContain("color-mix");
@@ -100,7 +105,7 @@ describe("glass effect", () => {
   it("sets spectrum opacity variable based on intensity", () => {
     const host = document.createElement("div");
     document.body.appendChild(host);
-    setup(host, mockVars({ intensity: 0.5 }));
+    setup(host, mockVars({ glassIntensity: 0.5 }));
     const clip = host.querySelector(".fx-glass-clip") as HTMLElement;
     expect(clip.style.getPropertyValue("--fx-glass-spectrum-op")).toBe("0.2"); // 0.5 * 0.4 = 0.2
     document.body.removeChild(host);
@@ -109,7 +114,7 @@ describe("glass effect", () => {
   it("sets chroma opacity variable based on intensity and glassChroma", () => {
     const host = document.createElement("div");
     document.body.appendChild(host);
-    setup(host, mockVars({ intensity: 0.8, glassChroma: 0.5 }));
+    setup(host, mockVars({ glassIntensity: 0.8, glassChroma: 0.5 }));
     const clip = host.querySelector(".fx-glass-clip") as HTMLElement;
     expect(Number.parseFloat(clip.style.getPropertyValue("--fx-glass-chroma-op"))).toBeCloseTo(0.4);
     document.body.removeChild(host);

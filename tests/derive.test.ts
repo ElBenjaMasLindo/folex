@@ -18,46 +18,48 @@ describe("resolveVars — validation table defaults", () => {
   it("returns every documented default on a bare host", () => {
     const el = makeHost();
     const v = resolveVars(el);
-    expect(v.intensity).toBe(0.6);
+    expect(v.glowIntensity).toBe(0.6);
+    expect(v.rippleIntensity).toBe(0.6);
+    expect(v.glassIntensity).toBe(0.6);
     expect(v.speed).toBe(1);
-    expect(v.scale).toBe(1);
-    expect(v.density).toBe(1.25);
-    expect(v.layers).toBe(1);
-    expect(v.field).toBe("turbulence");
-    expect(v.distort).toBe(0);
-    expect(v.blur).toBe(12);
-    expect(v.tint).toBe(0.15);
-    expect(v.bounds).toBe("normal");
+    expect(v.rippleScale).toBe(1);
+    expect(v.pixieDensity).toBe(1.25);
+    expect(v.rippleLayers).toBe(1);
+    expect(v.rippleField).toBe("turbulence");
+    expect(v.rippleDistort).toBe(0);
+    expect(v.rippleBlur).toBe(12);
+    expect(v.rippleTint).toBe(0.15);
+    expect(v.pixieBounds).toBe("normal");
     el.remove();
   });
 
   it("rounds layers to an integer", () => {
-    const el = makeHost("--fx-layers: 3.7");
-    expect(resolveVars(el).layers).toBe(4);
+    const el = makeHost("--fx-ripple-layers: 3.7");
+    expect(resolveVars(el).rippleLayers).toBe(4);
     el.remove();
   });
 
   it("clamps out-of-range numbers", () => {
-    const el = makeHost("--fx-speed: -50; --fx-blur: 999; --fx-tint: 5");
+    const el = makeHost("--fx-speed: -50; --fx-ripple-blur: 999; --fx-ripple-tint: 5");
     const v = resolveVars(el);
     expect(v.speed).toBe(0.1);
-    expect(v.blur).toBe(40);
-    expect(v.tint).toBe(1);
+    expect(v.rippleBlur).toBe(40);
+    expect(v.rippleTint).toBe(1);
     el.remove();
   });
 
   it("falls back on garbage values", () => {
-    const el = makeHost("--fx-layers: abc; --fx-density: ; --fx-field: nonsense");
+    const el = makeHost("--fx-ripple-layers: abc; --fx-pixie-density: ; --fx-ripple-field: nonsense");
     const v = resolveVars(el);
-    expect(v.layers).toBe(1);
-    expect(v.density).toBe(1.25);
-    expect(v.field).toBe("turbulence");
+    expect(v.rippleLayers).toBe(1);
+    expect(v.pixieDensity).toBe(1.25);
+    expect(v.rippleField).toBe("turbulence");
     el.remove();
   });
 
   it("accepts a valid enum value", () => {
-    const el = makeHost("--fx-field: cellular");
-    expect(resolveVars(el).field).toBe("cellular");
+    const el = makeHost("--fx-ripple-field: cellular");
+    expect(resolveVars(el).rippleField).toBe("cellular");
     el.remove();
   });
 });
@@ -65,7 +67,7 @@ describe("resolveVars — validation table defaults", () => {
 describe("resolveVars — pixie bounds", () => {
   it("defaults to normal", () => {
     const el = makeHost();
-    expect(resolveVars(el).bounds).toBe("normal");
+    expect(resolveVars(el).pixieBounds).toBe("normal");
     el.remove();
   });
 
@@ -76,13 +78,13 @@ describe("resolveVars — pixie bounds", () => {
     "strict",
   ] as const)("accepts %s as a valid --fx-pixie-bounds value", (level) => {
     const el = makeHost(`--fx-pixie-bounds: ${level}`);
-    expect(resolveVars(el).bounds).toBe(level);
+    expect(resolveVars(el).pixieBounds).toBe(level);
     el.remove();
   });
 
   it("falls back to normal on garbage values", () => {
     const el = makeHost("--fx-pixie-bounds: bananas");
-    expect(resolveVars(el).bounds).toBe("normal");
+    expect(resolveVars(el).pixieBounds).toBe("normal");
     el.remove();
   });
 });

@@ -27,7 +27,7 @@
   inset: -50%;
   background-repeat: repeat;
   background-size: 50%;
-  animation-duration: var(--fx-dur, 6s);
+  animation-duration: var(--fx-ripple-dur, 6s);
   transform: translate3d(0, 0, 0);
 }
 

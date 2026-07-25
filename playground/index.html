@@ -36,9 +36,9 @@
       .glow-host { width: 110px; height: 110px; border-radius: 50%; background: #ffb37c; }
       .glow-card { width: 140px; height: 100px; border-radius: 18px; background: #2e1065; }
       .glow-pill { width: 130px; height: 50px;  border-radius: 999px; background: #0ea5e9; }
-      .stage-glow .demo:hover .glow-host { --fx-dur: 1.5s; }
-      .stage-glow .demo:hover .glow-card { --fx-dur: 1.5s; }
-      .stage-glow .demo:hover .glow-pill { --fx-dur: 1.5s; }
+      .stage-glow .demo:hover .glow-host { --fx-glow-dur: 1.5s; }
+      .stage-glow .demo:hover .glow-card { --fx-glow-dur: 1.5s; }
+      .stage-glow .demo:hover .glow-pill { --fx-glow-dur: 1.5s; }
     </style>
   </head>
   <body>
@@ -47,19 +47,19 @@
     <h2>Ripple · turbulence field</h2>
     <div class="stage">
       <div class="demo">
-        <div class="orb" data-folex="ripple" style="--fx-field: turbulence; --fx-layers: 1; --fx-color: #60a5fa;"></div>
+        <div class="orb" data-folex="ripple" style="--fx-ripple-field: turbulence; --fx-ripple-layers: 1; --fx-color: #60a5fa;"></div>
         <small>turbulence · 1 layer</small>
       </div>
       <div class="demo">
-        <div class="orb" data-folex="ripple" style="--fx-field: turbulence; --fx-layers: 3; --fx-color: #60a5fa;"></div>
+        <div class="orb" data-folex="ripple" style="--fx-ripple-field: turbulence; --fx-ripple-layers: 3; --fx-color: #60a5fa;"></div>
         <small>turbulence · 3 layers</small>
       </div>
       <div class="demo">
-        <div class="orb" data-folex="ripple" style="--fx-field: turbulence; --fx-layers: 6; --fx-color: #60a5fa;"></div>
+        <div class="orb" data-folex="ripple" style="--fx-ripple-field: turbulence; --fx-ripple-layers: 6; --fx-color: #60a5fa;"></div>
         <small>turbulence · 6 layers</small>
       </div>
       <div class="demo">
-        <div class="orb" data-folex="ripple" style="--fx-field: turbulence; --fx-layers: 12; --fx-color: #60a5fa;"></div>
+        <div class="orb" data-folex="ripple" style="--fx-ripple-field: turbulence; --fx-ripple-layers: 12; --fx-color: #60a5fa;"></div>
         <small>turbulence · 12 layers</small>
       </div>
     </div>
@@ -67,19 +67,19 @@
     <h2>Ripple · cellular field</h2>
     <div class="stage">
       <div class="demo">
-        <div class="card" data-folex="ripple" style="--fx-field: cellular; --fx-layers: 1; --fx-color: #7c3aed;"></div>
+        <div class="card" data-folex="ripple" style="--fx-ripple-field: cellular; --fx-ripple-layers: 1; --fx-color: #7c3aed;"></div>
         <small>cellular · 1 layer</small>
       </div>
       <div class="demo">
-        <div class="card" data-folex="ripple" style="--fx-field: cellular; --fx-layers: 3; --fx-color: #7c3aed;"></div>
+        <div class="card" data-folex="ripple" style="--fx-ripple-field: cellular; --fx-ripple-layers: 3; --fx-color: #7c3aed;"></div>
         <small>cellular · 3 layers</small>
       </div>
       <div class="demo">
-        <div class="card" data-folex="ripple" style="--fx-field: cellular; --fx-layers: 6; --fx-color: #7c3aed;"></div>
+        <div class="card" data-folex="ripple" style="--fx-ripple-field: cellular; --fx-ripple-layers: 6; --fx-color: #7c3aed;"></div>
         <small>cellular · 6 layers</small>
       </div>
       <div class="demo">
-        <div class="card" data-folex="ripple" style="--fx-field: cellular; --fx-layers: 12; --fx-color: #7c3aed;"></div>
+        <div class="card" data-folex="ripple" style="--fx-ripple-field: cellular; --fx-ripple-layers: 12; --fx-color: #7c3aed;"></div>
         <small>cellular · 12 layers</small>
       </div>
     </div>
@@ -125,11 +125,11 @@
         <small>tilt + glass + glow</small>
       </div>
       <div class="demo">
-        <div class="swatch" data-folex="tilt ripple glow" style="--fx-field: turbulence; --fx-layers: 4; --fx-color: #0ea5e9;"></div>
+        <div class="swatch" data-folex="tilt ripple glow" style="--fx-ripple-field: turbulence; --fx-ripple-layers: 4; --fx-color: #0ea5e9;"></div>
         <small>tilt + ripple + glow</small>
       </div>
       <div class="demo">
-        <div class="tile" data-folex="tilt ripple pixie" style="--fx-field: cellular; --fx-layers: 5; --fx-speed: 2; --fx-color: #22c55e;"></div>
+        <div class="tile" data-folex="tilt ripple pixie" style="--fx-ripple-field: cellular; --fx-ripple-layers: 5; --fx-speed: 2; --fx-color: #22c55e;"></div>
         <small>tilt + ripple + pixie</small>
       </div>
     </div>
@@ -137,19 +137,19 @@
     <h2>Glow · intensity scale</h2>
     <div class="stage">
       <div class="demo">
-        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-intensity: 0.2;"></div>
+        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-glow-intensity: 0.2;"></div>
         <small>intensity 0.2</small>
       </div>
       <div class="demo">
-        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-intensity: 0.5;"></div>
+        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-glow-intensity: 0.5;"></div>
         <small>intensity 0.5</small>
       </div>
       <div class="demo">
-        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-intensity: 0.8;"></div>
+        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-glow-intensity: 0.8;"></div>
         <small>intensity 0.8</small>
       </div>
       <div class="demo">
-        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-intensity: 1;"></div>
+        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-glow-intensity: 1;"></div>
         <small>intensity 1.0</small>
       </div>
     </div>
@@ -157,19 +157,19 @@
     <h2>Glow · intensity scale + box-shadow (comparison)</h2>
     <div class="stage">
       <div class="demo">
-        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-intensity: 0.2; box-shadow: 0 0 6px 1px rgba(255,179,124,0.2);"></div>
+        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-glow-intensity: 0.2; box-shadow: 0 0 6px 1px rgba(255,179,124,0.2);"></div>
         <small>intensity 0.2 + shadow</small>
       </div>
       <div class="demo">
-        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-intensity: 0.5; box-shadow: 0 0 6px 1px rgba(255,179,124,0.5);"></div>
+        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-glow-intensity: 0.5; box-shadow: 0 0 6px 1px rgba(255,179,124,0.5);"></div>
         <small>intensity 0.5 + shadow</small>
       </div>
       <div class="demo">
-        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-intensity: 0.8; box-shadow: 0 0 6px 1px rgba(255,179,124,1);"></div>
+        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-glow-intensity: 0.8; box-shadow: 0 0 6px 1px rgba(255,179,124,1);"></div>
         <small>intensity 0.8 + shadow</small>
       </div>
       <div class="demo">
-        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-intensity: 1; box-shadow: 0 0 3px 1px rgba(255,179,124,1);"></div>
+        <div class="glow-host" data-folex="glow" style="--fx-color: #ffb37c; --fx-glow-intensity: 1; box-shadow: 0 0 3px 1px rgba(255,179,124,1);"></div>
         <small>intensity 1.0 + shadow</small>
       </div>
     </div>
@@ -197,24 +197,24 @@
     <h2>Glow · blend modes</h2>
     <div class="stage">
       <div class="demo">
-        <div class="gem" data-folex="glow" style="--fx-color: #fbbf24; --fx-blend: screen;"></div>
+        <div class="gem" data-folex="glow" style="--fx-color: #fbbf24; --fx-glow-blend: screen;"></div>
         <small>blend: screen</small>
       </div>
       <div class="demo">
-        <div class="gem" data-folex="glow" style="--fx-color: #fbbf24; --fx-blend: overlay;"></div>
+        <div class="gem" data-folex="glow" style="--fx-color: #fbbf24; --fx-glow-blend: overlay;"></div>
         <small>blend: overlay (default)</small>
       </div>
       <div class="demo">
-        <div class="gem" data-folex="glow" style="--fx-color: #fbbf24; --fx-blend: soft-light;"></div>
+        <div class="gem" data-folex="glow" style="--fx-color: #fbbf24; --fx-glow-blend: soft-light;"></div>
         <small>blend: soft-light</small>
       </div>
       <div class="demo">
-        <div class="gem" data-folex="glow" style="--fx-color: #fbbf24; --fx-blend: color-dodge;"></div>
+        <div class="gem" data-folex="glow" style="--fx-color: #fbbf24; --fx-glow-blend: color-dodge;"></div>
         <small>blend: color-dodge</small>
       </div>
     </div>
 
-    <h2>Glow · --fx-dur override on :hover (CSS variable hook)</h2>
+    <h2>Glow · --fx-glow-dur override on :hover (CSS variable hook)</h2>
     <p style="opacity: 0.6; font-size: 12px; margin: -20px 0 0 0;">hover any element below — breath accelerates to 1.5s</p>
     <div class="stage stage-glow">
       <div class="demo">
@@ -230,7 +230,7 @@
         <small>pill · hover accelerates</small>
       </div>
       <div class="demo">
-        <div class="glow-card" data-folex="glow" style="--fx-color: #f59e0b; --fx-speed: 0.5; --fx-intensity: 0.9;"></div>
+        <div class="glow-card" data-folex="glow" style="--fx-color: #f59e0b; --fx-speed: 0.5; --fx-glow-intensity: 0.9;"></div>
         <small>bright card · hover</small>
       </div>
     </div>

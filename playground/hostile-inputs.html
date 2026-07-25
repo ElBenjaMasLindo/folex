@@ -26,8 +26,8 @@
     <div class="grid">
       <div class="cell">
         <!-- Out-of-range layers: 999 MUST clamp to 12. -->
-        <div class="hostile" data-folex="ripple" style="--fx-layers: 999;"></div>
-        <code>--fx-layers: 999 → clamps to 12</code>
+        <div class="hostile" data-folex="ripple" style="--fx-ripple-layers: 999;"></div>
+        <code>--fx-ripple-layers: 999 → clamps to 12</code>
       </div>
       <div class="cell">
         <!-- Invalid color falls back to the derived/warm default. -->
@@ -41,8 +41,8 @@
       </div>
       <div class="cell">
         <!-- Unknown enum value falls back to turbulence. -->
-        <div class="hostile" data-folex="ripple" style="--fx-field: nonsense; --fx-color: #c4b5fd;"></div>
-        <code>--fx-field: nonsense → turbulence</code>
+        <div class="hostile" data-folex="ripple" style="--fx-ripple-field: nonsense; --fx-color: #c4b5fd;"></div>
+        <code>--fx-ripple-field: nonsense → turbulence</code>
       </div>
     </div>
     <div class="cell">
@@ -50,7 +50,7 @@
       <div
         class="hostile"
         data-folex="glow ripple pixie"
-        style="--fx-layers: 999; --fx-color: not-a-color; --fx-speed: -50; --fx-field: nonsense;"
+        style="--fx-ripple-layers: 999; --fx-color: not-a-color; --fx-speed: -50; --fx-ripple-field: nonsense;"
       ></div>
       <code>all hostile at once → safe defaults</code>
     </div>

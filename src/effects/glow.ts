@@ -4,7 +4,7 @@ import type { ResolvedVars } from "../core/derive";
 const _anims = new WeakMap<HTMLElement, Animation>();
 
 export function setup(host: HTMLElement, vars: ResolvedVars): void {
-  const i = vars.intensity;
+  const i = vars.glowIntensity;
 
   // Layer 1: edge gradient diffusion (intermediate blur 2-5px, tight spread, high opacity)
   const blur1 = Math.round(2 + 3 * i);

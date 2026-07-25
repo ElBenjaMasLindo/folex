@@ -15,21 +15,26 @@ export type BlendMode =
 export interface ResolvedVars {
   color: string;
   radius: string;
-  intensity: number;
   speed: number;
-  scale: number;
-  density: number;
-  layers: number;
-  field: "turbulence" | "cellular";
-  blend: BlendMode;
-  distort: number;
-  blur: number;
-  tint: number;
-  bounds: BoundsLevel;
+  glowIntensity: number;
+  glowBlend: BlendMode;
+  rippleIntensity: number;
+  rippleScale: number;
+  rippleLayers: number;
+  rippleField: "turbulence" | "cellular";
+  rippleBlend: BlendMode;
+  rippleDistort: number;
+  rippleBlur: number;
+  rippleTint: number;
+  pixieDensity: number;
+  pixieBounds: BoundsLevel;
+  pixieScale: number;
+  glassIntensity: number;
   glassBlur: number;
   glassSaturate: number;
   glassChroma: number;
   glassSpectrumSpeed: number;
+  glassTint: number;
   tiltMax: number;
   tiltPerspective: number;
   tiltScale: number;
@@ -40,41 +45,30 @@ const FALLBACK_COLOR = "#ffb37c";
 
 type Row<T> = {
   prop: string;
-  key: Exclude<keyof ResolvedVars, "color" | "radius">;
+  key: Exclude<keyof ResolvedVars, "color" | "radius" | "rippleField" | "glowBlend" | "rippleBlend" | "pixieBounds">;
   validate: (raw: string | null, fallback: T) => T;
   fallback: T;
 };
 
 const TABLE: Row<number>[] = [
-  { prop: "--fx-intensity", key: "intensity", validate: numberInRange(0, 1), fallback: 0.6 },
   { prop: "--fx-speed", key: "speed", validate: numberInRange(0.1, 5), fallback: 1 },
-  { prop: "--fx-scale", key: "scale", validate: numberInRange(0.1, 5), fallback: 1 },
-  { prop: "--fx-density", key: "density", validate: numberInRange(0, 3), fallback: 1.25 },
-  { prop: "--fx-layers", key: "layers", validate: numberInRange(1, 12), fallback: 1 },
-  { prop: "--fx-distort", key: "distort", validate: numberInRange(0, 1), fallback: 0 },
-  { prop: "--fx-blur", key: "blur", validate: numberInRange(0, 40), fallback: 12 },
-  { prop: "--fx-tint", key: "tint", validate: numberInRange(0, 1), fallback: 0.15 },
+  { prop: "--fx-glow-intensity", key: "glowIntensity", validate: numberInRange(0, 1), fallback: 0.6 },
+  { prop: "--fx-ripple-intensity", key: "rippleIntensity", validate: numberInRange(0, 1), fallback: 0.6 },
+  { prop: "--fx-ripple-scale", key: "rippleScale", validate: numberInRange(0.1, 5), fallback: 1 },
+  { prop: "--fx-ripple-layers", key: "rippleLayers", validate: numberInRange(1, 12), fallback: 1 },
+  { prop: "--fx-ripple-distort", key: "rippleDistort", validate: numberInRange(0, 1), fallback: 0 },
+  { prop: "--fx-ripple-blur", key: "rippleBlur", validate: numberInRange(0, 40), fallback: 12 },
+  { prop: "--fx-ripple-tint", key: "rippleTint", validate: numberInRange(0, 1), fallback: 0.15 },
+  { prop: "--fx-pixie-density", key: "pixieDensity", validate: numberInRange(0, 3), fallback: 1.25 },
+  { prop: "--fx-pixie-scale", key: "pixieScale", validate: numberInRange(0.1, 5), fallback: 1 },
+  { prop: "--fx-glass-intensity", key: "glassIntensity", validate: numberInRange(0, 1), fallback: 0.6 },
   { prop: "--fx-glass-blur", key: "glassBlur", validate: numberInRange(0, 40), fallback: 12 },
-  {
-    prop: "--fx-glass-saturate",
-    key: "glassSaturate",
-    validate: numberInRange(100, 300),
-    fallback: 180,
-  },
+  { prop: "--fx-glass-saturate", key: "glassSaturate", validate: numberInRange(100, 300), fallback: 180 },
   { prop: "--fx-glass-chroma", key: "glassChroma", validate: numberInRange(0, 1), fallback: 0.3 },
-  {
-    prop: "--fx-glass-spectrum-speed",
-    key: "glassSpectrumSpeed",
-    validate: numberInRange(0.1, 5),
-    fallback: 1,
-  },
+  { prop: "--fx-glass-spectrum-speed", key: "glassSpectrumSpeed", validate: numberInRange(0.1, 5), fallback: 1 },
+  { prop: "--fx-glass-tint", key: "glassTint", validate: numberInRange(0, 1), fallback: 0.15 },
   { prop: "--fx-tilt-max", key: "tiltMax", validate: numberInRange(1, 45), fallback: 15 },
-  {
-    prop: "--fx-tilt-perspective",
-    key: "tiltPerspective",
-    validate: numberInRange(200, 2000),
-    fallback: 800,
-  },
+  { prop: "--fx-tilt-perspective", key: "tiltPerspective", validate: numberInRange(200, 2000), fallback: 800 },
   { prop: "--fx-tilt-scale", key: "tiltScale", validate: numberInRange(1, 1.15), fallback: 1.05 },
   { prop: "--fx-tilt-speed", key: "tiltSpeed", validate: numberInRange(0.1, 5), fallback: 1 },
 ];
@@ -118,21 +112,26 @@ export function resolveVars(host: HTMLElement): ResolvedVars {
   const vars: ResolvedVars = {
     color,
     radius,
-    intensity: 0.6,
     speed: 1,
-    scale: 1,
-    density: 1.25,
-    layers: 1,
-    field: "turbulence",
-    blend: "overlay",
-    distort: 0,
-    blur: 12,
-    tint: 0.15,
-    bounds: "normal",
+    glowIntensity: 0.6,
+    glowBlend: "overlay",
+    rippleIntensity: 0.6,
+    rippleScale: 1,
+    rippleLayers: 1,
+    rippleField: "turbulence",
+    rippleBlend: "overlay",
+    rippleDistort: 0,
+    rippleBlur: 12,
+    rippleTint: 0.15,
+    pixieDensity: 1.25,
+    pixieBounds: "normal",
+    pixieScale: 1,
+    glassIntensity: 0.6,
     glassBlur: 12,
     glassSaturate: 180,
     glassChroma: 0.3,
     glassSpectrumSpeed: 1,
+    glassTint: 0.15,
     tiltMax: 15,
     tiltPerspective: 800,
     tiltScale: 1.05,
@@ -144,16 +143,19 @@ export function resolveVars(host: HTMLElement): ResolvedVars {
     (vars[row.key] as number) = row.validate(raw, row.fallback);
   }
 
-  vars.layers = Math.round(vars.layers);
+  vars.rippleLayers = Math.round(vars.rippleLayers);
 
-  const fieldRaw = style.getPropertyValue("--fx-field");
-  vars.field = enumMatch(FIELD_VALUES)(fieldRaw, "turbulence");
+  const rippleFieldRaw = style.getPropertyValue("--fx-ripple-field");
+  vars.rippleField = enumMatch(FIELD_VALUES)(rippleFieldRaw, "turbulence");
 
-  const blendRaw = style.getPropertyValue("--fx-blend");
-  vars.blend = enumMatch(BLEND_VALUES)(blendRaw, "overlay");
+  const glowBlendRaw = style.getPropertyValue("--fx-glow-blend");
+  vars.glowBlend = enumMatch(BLEND_VALUES)(glowBlendRaw, "overlay");
 
-  const boundsRaw = style.getPropertyValue("--fx-pixie-bounds");
-  vars.bounds = enumMatch(BOUNDS_VALUES)(boundsRaw, "normal");
+  const rippleBlendRaw = style.getPropertyValue("--fx-ripple-blend");
+  vars.rippleBlend = enumMatch(BLEND_VALUES)(rippleBlendRaw, "overlay");
+
+  const pixieBoundsRaw = style.getPropertyValue("--fx-pixie-bounds");
+  vars.pixieBounds = enumMatch(BOUNDS_VALUES)(pixieBoundsRaw, "normal");
 
   return vars;
 }

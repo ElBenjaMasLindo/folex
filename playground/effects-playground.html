@@ -611,7 +611,7 @@
           <!-- Intensity -->
           <div class="control-group">
             <div class="control-row">
-              <span class="control-label">Intensidad (--fx-intensity)</span>
+              <span class="control-label">Intensidad (--fx-glow-intensity)</span>
               <span class="control-value" id="val-intensity">0.8</span>
             </div>
             <input type="range" id="input-intensity" min="0" max="1" step="0.05" value="0.8" />
@@ -659,7 +659,7 @@
           </div>
           <div class="control-group">
             <div class="control-row">
-              <span class="control-label">Tinte (--fx-tint)</span>
+              <span class="control-label">Tinte (--fx-glass-tint)</span>
               <span class="control-value" id="val-tint">0.2</span>
             </div>
             <input type="range" id="input-tint" min="0" max="1" step="0.05" value="0.2" />
@@ -671,27 +671,27 @@
           <div class="panel-title">Configuración: Ripple</div>
           <div class="control-group">
             <div class="control-row">
-              <span class="control-label">Capas (--fx-layers)</span>
+              <span class="control-label">Capas (--fx-ripple-layers)</span>
               <span class="control-value" id="val-layers">4</span>
             </div>
             <input type="range" id="input-layers" min="1" max="12" step="1" value="4" />
           </div>
           <div class="control-group">
             <div class="control-row">
-              <span class="control-label">Distorsión (--fx-distort)</span>
+              <span class="control-label">Distorsión (--fx-ripple-distort)</span>
               <span class="control-value" id="val-distort">0.3</span>
             </div>
             <input type="range" id="input-distort" min="0" max="1" step="0.05" value="0.3" />
           </div>
           <div class="control-group">
-            <label class="control-label">Campo de Ruido (--fx-field)</label>
+            <label class="control-label">Campo de Ruido (--fx-ripple-field)</label>
             <select id="input-field">
               <option value="turbulence" selected>Turbulencia</option>
               <option value="cellular">Celular (Voronoi)</option>
             </select>
           </div>
           <div class="control-group">
-            <label class="control-label">Mezcla (--fx-blend)</label>
+            <label class="control-label">Mezcla (--fx-ripple-blend)</label>
             <select id="input-blend">
               <option value="overlay" selected>overlay</option>
               <option value="screen">screen</option>
@@ -711,14 +711,14 @@
           <div class="panel-title">Configuración: Pixie</div>
           <div class="control-group">
             <div class="control-row">
-              <span class="control-label">Densidad (--fx-density)</span>
+              <span class="control-label">Densidad (--fx-pixie-density)</span>
               <span class="control-value" id="val-density">1.25</span>
             </div>
             <input type="range" id="input-density" min="0" max="3" step="0.05" value="1.25" />
           </div>
           <div class="control-group">
             <div class="control-row">
-              <span class="control-label">Escala de Mota (--fx-scale)</span>
+              <span class="control-label">Escala de Mota (--fx-pixie-scale)</span>
               <span class="control-value" id="val-scale">1</span>
             </div>
             <input type="range" id="input-scale" min="0.1" max="5" step="0.1" value="1" />
@@ -953,20 +953,22 @@
           text: previewTextInput.value,
           variables: {
             '--fx-color': inputColor.value,
-            '--fx-intensity': inputIntensity.value,
+            '--fx-glow-intensity': inputIntensity.value,
+            '--fx-ripple-intensity': inputIntensity.value,
+            '--fx-glass-intensity': inputIntensity.value,
             '--fx-speed': inputSpeed.value,
-            '--fx-scale': inputScale.value,
-            '--fx-density': inputDensity.value,
-            '--fx-layers': inputLayers.value,
-            '--fx-distort': inputDistort.value,
-            '--fx-blur': inputGlassBlur.value, // Used by core as fallback
-            '--fx-tint': inputTint.value,
+            '--fx-pixie-scale': inputScale.value,
+            '--fx-pixie-density': inputDensity.value,
+            '--fx-ripple-layers': inputLayers.value,
+            '--fx-ripple-distort': inputDistort.value,
             '--fx-glass-blur': inputGlassBlur.value,
+            '--fx-glass-tint': inputTint.value,
             '--fx-glass-saturate': inputGlassSaturate.value,
             '--fx-glass-chroma': inputGlassChroma.value,
             '--fx-glass-spectrum-speed': inputGlassSpectrumSpeed.value,
-            '--fx-field': inputField.value,
-            '--fx-blend': inputBlend.value,
+            '--fx-ripple-field': inputField.value,
+            '--fx-ripple-blend': inputBlend.value,
+            '--fx-glow-blend': inputBlend.value,
             '--fx-pixie-bounds': inputPixieBounds.value
           }
         };
@@ -976,27 +978,30 @@
       function generateCodeString(state) {
         const fxVal = state.effects.join(' ');
         let styleStr = `  --fx-color: ${state.variables['--fx-color']};\n`;
-        styleStr += `  --fx-intensity: ${state.variables['--fx-intensity']};\n`;
         styleStr += `  --fx-speed: ${state.variables['--fx-speed']};\n`;
+
+        if (state.effects.includes('glow')) {
+          styleStr += `  --fx-glow-intensity: ${state.variables['--fx-glow-intensity']};\n`;
+        }
 
         if (state.effects.includes('glass')) {
           styleStr += `  --fx-glass-blur: ${state.variables['--fx-glass-blur']};\n`;
           styleStr += `  --fx-glass-saturate: ${state.variables['--fx-glass-saturate']};\n`;
           styleStr += `  --fx-glass-chroma: ${state.variables['--fx-glass-chroma']};\n`;
           styleStr += `  --fx-glass-spectrum-speed: ${state.variables['--fx-glass-spectrum-speed']};\n`;
-          styleStr += `  --fx-tint: ${state.variables['--fx-tint']};\n`;
+          styleStr += `  --fx-glass-tint: ${state.variables['--fx-glass-tint']};\n`;
         }
 
         if (state.effects.includes('ripple')) {
-          styleStr += `  --fx-layers: ${state.variables['--fx-layers']};\n`;
-          styleStr += `  --fx-distort: ${state.variables['--fx-distort']};\n`;
-          styleStr += `  --fx-field: ${state.variables['--fx-field']};\n`;
-          styleStr += `  --fx-blend: ${state.variables['--fx-blend']};\n`;
+          styleStr += `  --fx-ripple-layers: ${state.variables['--fx-ripple-layers']};\n`;
+          styleStr += `  --fx-ripple-distort: ${state.variables['--fx-ripple-distort']};\n`;
+          styleStr += `  --fx-ripple-field: ${state.variables['--fx-ripple-field']};\n`;
+          styleStr += `  --fx-ripple-blend: ${state.variables['--fx-ripple-blend']};\n`;
         }
 
         if (state.effects.includes('pixie')) {
-          styleStr += `  --fx-density: ${state.variables['--fx-density']};\n`;
-          styleStr += `  --fx-scale: ${state.variables['--fx-scale']};\n`;
+          styleStr += `  --fx-pixie-density: ${state.variables['--fx-pixie-density']};\n`;
+          styleStr += `  --fx-pixie-scale: ${state.variables['--fx-pixie-scale']};\n`;
           styleStr += `  --fx-pixie-bounds: ${state.variables['--fx-pixie-bounds']};\n`;
         }
 

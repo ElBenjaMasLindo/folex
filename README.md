@@ -38,7 +38,7 @@ npm install folex-fx
   </style>
 </head>
 <body>
-  <div class="box" data-folex="glass glow ripple" style="--fx-color: #7c3aed; --fx-layers: 3">
+  <div class="box" data-folex="glass glow ripple" style="--fx-color: #7c3aed; --fx-ripple-layers: 3">
     Folex
   </div>
   <script type="module">
@@ -100,7 +100,7 @@ init({ root: document.getElementById("app"), watch: true });
 ```js
 import { registry } from "folex-fx";
 registry.myEffect = (host, vars) => {
-  // vars.color, vars.intensity, vars.speed, ...
+  // vars.color, vars.glowIntensity, vars.speed, ...
   host.style.filter = `hue-rotate(${vars.speed * 60}deg)`;
 };
 ```
@@ -112,22 +112,31 @@ All configuration via `--fx-*` properties on the host element. Every property ha
 | Property | Effects | Type | Default | Range |
 |----------|---------|------|---------|-------|
 | `--fx-color` | all | color | derived from `color`/`background-color` of element, or `#ffb37c` | any valid CSS color |
-| `--fx-intensity` | glow, ripple | number | `0.6` | `0`–`1` |
 | `--fx-speed` | all | number | `1` | `0.1`–`5` |
-| `--fx-scale` | ripple | number | `1` | `0.1`–`5` |
-| `--fx-density` | pixie | number | `1.25` | `0`–`3` |
-| `--fx-layers` | ripple | integer | `1` | `1`–`12` |
-| `--fx-field` | ripple | string | `turbulence` | `turbulence`, `cellular` |
-| `--fx-blend` | glow | string | `overlay` | `screen`, `multiply`, `overlay`, `soft-light`, `hard-light`, `darken`, `lighten`, `color-dodge`, `color-burn` |
-| `--fx-distort` | ripple | number | `0` | `0`–`1` |
-| `--fx-blur` | ripple | number | `12` | `0`–`40` |
-| `--fx-tint` | ripple | number | `0.15` | `0`–`1` |
+| `--fx-glow-intensity` | glow | number | `0.6` | `0`–`1` |
+| `--fx-glow-blend` | glow | string | `overlay` | `screen`, `multiply`, `overlay`, `soft-light`, `hard-light`, `darken`, `lighten`, `color-dodge`, `color-burn` |
+| `--fx-glow-dur` | glow | time | `3s` | any CSS time |
+| `--fx-ripple-intensity` | ripple | number | `0.6` | `0`–`1` |
+| `--fx-ripple-scale` | ripple | number | `1` | `0.1`–`5` |
+| `--fx-ripple-layers` | ripple | integer | `1` | `1`–`12` |
+| `--fx-ripple-field` | ripple | string | `turbulence` | `turbulence`, `cellular` |
+| `--fx-ripple-blend` | ripple | string | `overlay` | `screen`, `multiply`, `overlay`, `soft-light`, `hard-light`, `darken`, `lighten`, `color-dodge`, `color-burn` |
+| `--fx-ripple-distort` | ripple | number | `0` | `0`–`1` |
+| `--fx-ripple-blur` | ripple | number | `12` | `0`–`40` |
+| `--fx-ripple-tint` | ripple | number | `0.15` | `0`–`1` |
+| `--fx-pixie-density` | pixie | number | `1.25` | `0`–`3` |
+| `--fx-pixie-bounds` | pixie | string | `normal` | `loose`, `normal`, `tight`, `strict` |
+| `--fx-pixie-scale` | pixie | number | `1` | `0.1`–`5` |
+| `--fx-glass-intensity` | glass | number | `0.6` | `0`–`1` |
 | `--fx-glass-blur` | glass | number | `12` | `0`–`40` |
 | `--fx-glass-saturate` | glass | number | `180` | `100`–`300` |
 | `--fx-glass-chroma` | glass | number | `0.3` | `0`–`1` |
 | `--fx-glass-spectrum-speed` | glass | number | `1` | `0.1`–`5` |
-| `--fx-pixie-bounds` | pixie | string | `normal` | `loose`, `normal`, `tight`, `strict` |
-| `--fx-dur` | glow | time | `3s` | any CSS time |
+| `--fx-glass-tint` | glass | number | `0.15` | `0`–`1` |
+| `--fx-tilt-max` | tilt | number | `15` | `1`–`45` |
+| `--fx-tilt-perspective` | tilt | number | `800` | `200`–`2000` |
+| `--fx-tilt-scale` | tilt | number | `1.05` | `1`–`1.15` |
+| `--fx-tilt-speed` | tilt | number | `1` | `0.1`–`5` |
 
 ## API
 

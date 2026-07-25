@@ -59,7 +59,7 @@ describe("init — parsing & binding", () => {
 
 describe("init — ripple self-clip wrapper", () => {
   it("wraps ripple layers inside a .fx-ripple-clip element", () => {
-    const el = makeHost("ripple", "--fx-layers: 2");
+    const el = makeHost("ripple", "--fx-ripple-layers: 2");
     init();
     const clip = el.querySelector(".fx-ripple-clip");
     expect(clip).not.toBeNull();
@@ -113,7 +113,7 @@ describe("init — hostile inputs at once (playground parity)", () => {
     el.setAttribute("data-folex", "glow ripple pixie");
     el.setAttribute(
       "style",
-      "--fx-layers: 999; --fx-color: not-a-color; --fx-speed: -50; --fx-field: nonsense;",
+      "--fx-ripple-layers: 999; --fx-color: not-a-color; --fx-speed: -50; --fx-ripple-field: nonsense;",
     );
     el.style.width = "120px";
     el.style.height = "120px";
@@ -128,9 +128,9 @@ describe("init — hostile inputs at once (playground parity)", () => {
   });
 });
 
-describe("init — --fx-blend applies to ripple", () => {
+describe("init — --fx-ripple-blend applies to ripple", () => {
   it("applies the configured blend mode on every ripple layer", () => {
-    const el = makeHost("ripple", "--fx-layers: 3; --fx-blend: overlay");
+    const el = makeHost("ripple", "--fx-ripple-layers: 3; --fx-ripple-blend: overlay");
     init();
     const layers = el.querySelectorAll(".fx-ripple");
     expect(layers.length).toBe(3);
@@ -139,36 +139,36 @@ describe("init — --fx-blend applies to ripple", () => {
     });
   });
 
-  it("falls back to overlay for unknown --fx-blend values on ripple", () => {
-    const el = makeHost("ripple", "--fx-blend: nonsense-mode");
+  it("falls back to overlay for unknown --fx-ripple-blend values on ripple", () => {
+    const el = makeHost("ripple", "--fx-ripple-blend: nonsense-mode");
     init();
     expect((el.querySelector(".fx-ripple") as HTMLElement).style.mixBlendMode).toBe("overlay");
   });
 });
 
 describe("init — ripple hover-flexible animation duration", () => {
-  it("sets --fx-dur as CSS custom property on every layer, not animation-duration inline", () => {
-    const el = makeHost("ripple", "--fx-layers: 2; --fx-speed: 1");
+  it("sets --fx-ripple-dur as CSS custom property on every layer, not animation-duration inline", () => {
+    const el = makeHost("ripple", "--fx-ripple-layers: 2; --fx-speed: 1");
     init();
     const layers = el.querySelectorAll(".fx-ripple") as NodeListOf<HTMLElement>;
     expect(layers.length).toBe(2);
     layers.forEach((l) => {
       expect(l.style.animationDuration).toBe("");
-      const dur = l.style.getPropertyValue("--fx-dur");
+      const dur = l.style.getPropertyValue("--fx-ripple-dur");
       expect(dur).toMatch(/^\d+\.\d{2}s$/);
     });
   });
 
-  it("scales --fx-dur with --fx-speed (higher speed = shorter duration)", () => {
-    const slow = makeHost("ripple", "--fx-layers: 1; --fx-speed: 0.5");
+  it("scales --fx-ripple-dur with --fx-speed (higher speed = shorter duration)", () => {
+    const slow = makeHost("ripple", "--fx-ripple-layers: 1; --fx-speed: 0.5");
     init();
-    const fast = makeHost("ripple", "--fx-layers: 1; --fx-speed: 4");
+    const fast = makeHost("ripple", "--fx-ripple-layers: 1; --fx-speed: 4");
     init();
     const slowDur = parseFloat(
-      (slow.querySelector(".fx-ripple") as HTMLElement).style.getPropertyValue("--fx-dur"),
+      (slow.querySelector(".fx-ripple") as HTMLElement).style.getPropertyValue("--fx-ripple-dur"),
     );
     const fastDur = parseFloat(
-      (fast.querySelector(".fx-ripple") as HTMLElement).style.getPropertyValue("--fx-dur"),
+      (fast.querySelector(".fx-ripple") as HTMLElement).style.getPropertyValue("--fx-ripple-dur"),
     );
     expect(fastDur).toBeLessThan(slowDur);
   });
@@ -180,8 +180,8 @@ describe("init — ripple opacity normalization preserves noise variance", () =>
   }
 
   it("per-layer opacity is lower when there are more layers (1/√N decay)", () => {
-    const one = makeHost("ripple", "--fx-layers: 1; --fx-intensity: 0.6");
-    const six = makeHost("ripple", "--fx-layers: 6; --fx-intensity: 0.6");
+    const one = makeHost("ripple", "--fx-ripple-layers: 1; --fx-ripple-intensity: 0.6");
+    const six = makeHost("ripple", "--fx-ripple-layers: 6; --fx-ripple-intensity: 0.6");
     init();
     const oneOp = parseFloat((one.querySelector(".fx-ripple") as HTMLElement).style.opacity);
     const sixOp = parseFloat((six.querySelector(".fx-ripple") as HTMLElement).style.opacity);
@@ -193,7 +193,7 @@ describe("init — ripple opacity normalization preserves noise variance", () =>
     // Var[result] ≈ o²·N·σ². If we want constant variance as N grows, o²·N must be constant.
     const cases = [1, 2, 3, 6, 8, 12];
     const samples = cases.map((N) => {
-      const el = makeHost("ripple", `--fx-layers: ${N}; --fx-intensity: 0.6`);
+      const el = makeHost("ripple", `--fx-ripple-layers: ${N}; --fx-ripple-intensity: 0.6`);
       init();
       const op = parseFloat((el.querySelector(".fx-ripple") as HTMLElement).style.opacity);
       return op * op * N;
@@ -206,7 +206,7 @@ describe("init — ripple opacity normalization preserves noise variance", () =>
   });
 
   it("at 12 layers, per-layer opacity is still high enough to be individually visible", () => {
-    const el = makeHost("ripple", "--fx-layers: 12; --fx-intensity: 0.6");
+    const el = makeHost("ripple", "--fx-ripple-layers: 12; --fx-ripple-intensity: 0.6");
     init();
     const op = parseFloat((el.querySelector(".fx-ripple") as HTMLElement).style.opacity);
     // I/√12 = 0.6/3.464 ≈ 0.173 — more than 2x the old formula's 0.074
@@ -215,14 +215,14 @@ describe("init — ripple opacity normalization preserves noise variance", () =>
   });
 
   it("respects the 0.03 floor for absurdly high layer counts or low intensity", () => {
-    const el = makeHost("ripple", "--fx-layers: 12; --fx-intensity: 0.05");
+    const el = makeHost("ripple", "--fx-ripple-layers: 12; --fx-ripple-intensity: 0.05");
     init();
     const op = parseFloat((el.querySelector(".fx-ripple") as HTMLElement).style.opacity);
     expect(op).toBe(0.03);
   });
 });
 
-describe("init — --fx-blend defaults to overlay (preserves noise contrast)", () => {
+describe("init — --fx-ripple-blend defaults to overlay (preserves noise contrast)", () => {
   it("applies overlay as the default mix-blend-mode on ripple layers", () => {
     const el = makeHost("ripple");
     init();
@@ -258,7 +258,7 @@ describe("init — glow box-shadow on host", () => {
   });
 
   it("sets only the glow shadow when the host has no existing box-shadow", () => {
-    const el = makeHost("glow", "--fx-intensity: 1");
+    const el = makeHost("glow", "--fx-glow-intensity: 1");
     init();
     expect(el.style.boxShadow).toMatch(/^0 0 5px 1px /);
     expect(el.style.boxShadow.split(",").length).toBe(2);
