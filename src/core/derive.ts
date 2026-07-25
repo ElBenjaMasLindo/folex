@@ -45,30 +45,68 @@ const FALLBACK_COLOR = "#ffb37c";
 
 type Row<T> = {
   prop: string;
-  key: Exclude<keyof ResolvedVars, "color" | "radius" | "rippleField" | "glowBlend" | "rippleBlend" | "pixieBounds">;
+  key: Exclude<
+    keyof ResolvedVars,
+    "color" | "radius" | "rippleField" | "glowBlend" | "rippleBlend" | "pixieBounds"
+  >;
   validate: (raw: string | null, fallback: T) => T;
   fallback: T;
 };
 
 const TABLE: Row<number>[] = [
   { prop: "--fx-speed", key: "speed", validate: numberInRange(0.1, 5), fallback: 1 },
-  { prop: "--fx-glow-intensity", key: "glowIntensity", validate: numberInRange(0, 1), fallback: 0.6 },
-  { prop: "--fx-ripple-intensity", key: "rippleIntensity", validate: numberInRange(0, 1), fallback: 0.6 },
+  {
+    prop: "--fx-glow-intensity",
+    key: "glowIntensity",
+    validate: numberInRange(0, 1),
+    fallback: 0.6,
+  },
+  {
+    prop: "--fx-ripple-intensity",
+    key: "rippleIntensity",
+    validate: numberInRange(0, 1),
+    fallback: 0.6,
+  },
   { prop: "--fx-ripple-scale", key: "rippleScale", validate: numberInRange(0.1, 5), fallback: 1 },
   { prop: "--fx-ripple-layers", key: "rippleLayers", validate: numberInRange(1, 12), fallback: 1 },
   { prop: "--fx-ripple-distort", key: "rippleDistort", validate: numberInRange(0, 1), fallback: 0 },
   { prop: "--fx-ripple-blur", key: "rippleBlur", validate: numberInRange(0, 40), fallback: 12 },
   { prop: "--fx-ripple-tint", key: "rippleTint", validate: numberInRange(0, 1), fallback: 0.15 },
-  { prop: "--fx-pixie-density", key: "pixieDensity", validate: numberInRange(0, 3), fallback: 1.25 },
+  {
+    prop: "--fx-pixie-density",
+    key: "pixieDensity",
+    validate: numberInRange(0, 3),
+    fallback: 1.25,
+  },
   { prop: "--fx-pixie-scale", key: "pixieScale", validate: numberInRange(0.1, 5), fallback: 1 },
-  { prop: "--fx-glass-intensity", key: "glassIntensity", validate: numberInRange(0, 1), fallback: 0.6 },
+  {
+    prop: "--fx-glass-intensity",
+    key: "glassIntensity",
+    validate: numberInRange(0, 1),
+    fallback: 0.6,
+  },
   { prop: "--fx-glass-blur", key: "glassBlur", validate: numberInRange(0, 40), fallback: 12 },
-  { prop: "--fx-glass-saturate", key: "glassSaturate", validate: numberInRange(100, 300), fallback: 180 },
+  {
+    prop: "--fx-glass-saturate",
+    key: "glassSaturate",
+    validate: numberInRange(100, 300),
+    fallback: 180,
+  },
   { prop: "--fx-glass-chroma", key: "glassChroma", validate: numberInRange(0, 1), fallback: 0.3 },
-  { prop: "--fx-glass-spectrum-speed", key: "glassSpectrumSpeed", validate: numberInRange(0.1, 5), fallback: 1 },
+  {
+    prop: "--fx-glass-spectrum-speed",
+    key: "glassSpectrumSpeed",
+    validate: numberInRange(0.1, 5),
+    fallback: 1,
+  },
   { prop: "--fx-glass-tint", key: "glassTint", validate: numberInRange(0, 1), fallback: 0.15 },
   { prop: "--fx-tilt-max", key: "tiltMax", validate: numberInRange(1, 45), fallback: 15 },
-  { prop: "--fx-tilt-perspective", key: "tiltPerspective", validate: numberInRange(200, 2000), fallback: 800 },
+  {
+    prop: "--fx-tilt-perspective",
+    key: "tiltPerspective",
+    validate: numberInRange(200, 2000),
+    fallback: 800,
+  },
   { prop: "--fx-tilt-scale", key: "tiltScale", validate: numberInRange(1, 1.15), fallback: 1.05 },
   { prop: "--fx-tilt-speed", key: "tiltSpeed", validate: numberInRange(0.1, 5), fallback: 1 },
 ];

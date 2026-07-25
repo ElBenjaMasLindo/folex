@@ -49,7 +49,9 @@ describe("resolveVars — validation table defaults", () => {
   });
 
   it("falls back on garbage values", () => {
-    const el = makeHost("--fx-ripple-layers: abc; --fx-pixie-density: ; --fx-ripple-field: nonsense");
+    const el = makeHost(
+      "--fx-ripple-layers: abc; --fx-pixie-density: ; --fx-ripple-field: nonsense",
+    );
     const v = resolveVars(el);
     expect(v.rippleLayers).toBe(1);
     expect(v.pixieDensity).toBe(1.25);
