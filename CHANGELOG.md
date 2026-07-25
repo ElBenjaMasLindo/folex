@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-24
+
+### Changed
+
+- Refactored CSS custom property names (`--fx-*`): effect-specific properties now explicitly require effect prefixes (e.g., `--fx-glow-intensity`, `--fx-ripple-layers`, `--fx-pixie-density`), leaving only global properties (`--fx-color`, `--fx-speed`) without an effect prefix
+
 ## [0.2.0] - 2026-07-24
 
 ### Added
@@ -22,7 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated `AGENTS.md` meta-rules with mandatory feature branching workflow (`feature/<name>`, `fix/<name>`) for major changes before merging to `master`
-- Refactored CSS custom property names (`--fx-*`): effect-specific properties now explicitly require effect prefixes (e.g., `--fx-glow-intensity`, `--fx-ripple-layers`, `--fx-pixie-density`), leaving only global properties (`--fx-color`, `--fx-speed`) without an effect prefix
 
 ### Fixed
 
@@ -42,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full TypeScript declarations
 - Zero runtime dependencies
 
-[Unreleased]: https://github.com/ElBenjaMasLindo/folex/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/ElBenjaMasLindo/folex/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/ElBenjaMasLindo/folex/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ElBenjaMasLindo/folex/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/ElBenjaMasLindo/folex/releases/tag/v0.1.0
