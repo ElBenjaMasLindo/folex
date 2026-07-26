@@ -1,6 +1,6 @@
 {
   "name": "folex-fx",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Lightweight, LLM-friendly layering library that makes plain HTML look magical.",
   "type": "module",
   "sideEffects": false,
