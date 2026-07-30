@@ -13,3 +13,4 @@
 
 - [ ] **feat(tilt):** Support negative/sub-unit scale values in `--fx-tilt-scale` (allow element to shrink on hover).
 - [ ] **feat(tilt):** Add subtle breathing oscillation to hover scale.
+- [ ] **feat(docs):** Add visual demonstration (screenshot/GIF/video) to README.
