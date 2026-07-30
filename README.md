@@ -15,9 +15,9 @@ Lightweight, zero-dependency visual effects library for plain HTML. Glass morphi
 ## Install
 
 ```sh
-pnpm add folex-fx
-# or
 npm install folex-fx
+# or
+pnpm add folex-fx
 ```
 
 ## Quickstart
@@ -191,13 +191,6 @@ import type { InitOptions, ResolvedVars, Tier, EffectName, EffectSetup, EffectRe
 
 SemVer. 0.x releases may include breaking changes in minor versions. Stability not yet claimed for the public API.
 
-## License
-
-[Mozilla Public License 2.0](https://mozilla.org/MPL/2.0/) — behaves like MIT when you
-`npm install` and use it as-is: no copyleft obligation on your code. Only
-applies if you modify folex's own source files. See [LICENSE](LICENSE) for
-full terms.
-
 ## Contributing
 
 Contributions are welcome! Please follow these guidelines:
@@ -205,3 +198,11 @@ Contributions are welcome! Please follow these guidelines:
 1. Clone the repository and install dependencies with `pnpm install`.
 2. Run `pnpm test` and `pnpm lint` before submitting a pull request.
 3. Keep changes minimal and focused. See [AGENTS.md](AGENTS.md) for internal architecture invariants and design directives.
+
+
+## License
+
+[Mozilla Public License 2.0](https://mozilla.org/MPL/2.0/) — behaves like MIT when you
+`npm install` and use it as-is: no copyleft obligation on your code. Only
+applies if you modify folex's own source files. See [LICENSE](LICENSE) for
+full terms.
