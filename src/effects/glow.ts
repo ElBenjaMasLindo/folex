@@ -3,36 +3,28 @@ import type { ResolvedVars } from "../core/derive";
 // One animation per host — cancel before replacing
 const _anims = new WeakMap<HTMLElement, Animation>();
 
-export function setup(host: HTMLElement, vars: ResolvedVars): void {
+function computeShadows(vars: ResolvedVars, existing: string) {
   const i = vars.glowIntensity;
-
-  // Layer 1: edge gradient diffusion (intermediate blur 2-5px, tight spread, high opacity)
   const blur1 = Math.round(2 + 3 * i);
-  const spread1 = 1;
-  const innerAlpha = Math.round(0xaa + 0x55 * i)
-    .toString(16)
-    .padStart(2, "0");
-
-  // Layer 2: ambient breathing glow (large blur, animated spread/blur, low alpha)
+  const innerAlpha = Math.round(0xaa + 0x55 * i).toString(16).padStart(2, "0");
   const blur2 = Math.round(12 + 40 * i);
   const spread2 = Math.round(2 + 8 * i);
-  const outerAlpha = Math.round(0x10 + 0x40 * i)
-    .toString(16)
-    .padStart(2, "0");
+  const outerAlpha = Math.round(0x10 + 0x40 * i).toString(16).padStart(2, "0");
 
-  const baseShadow = `0 0 ${blur1}px ${spread1}px ${vars.color}${innerAlpha}, 0 0 ${blur2}px ${spread2}px ${vars.color}${outerAlpha}`;
+  const baseShadow = `0 0 ${blur1}px 1px ${vars.color}${innerAlpha}, 0 0 ${blur2}px ${spread2}px ${vars.color}${outerAlpha}`;
+  const pulseShadow = `0 0 ${blur1}px 1px ${vars.color}${innerAlpha}, 0 0 ${Math.round(blur2 * 1.18)}px ${Math.round(spread2 * 1.18)}px ${vars.color}${outerAlpha}`;
+  const hasExisting = existing && existing !== "none";
+  return {
+    composedBase: hasExisting ? `${baseShadow}, ${existing}` : baseShadow,
+    composedPulse: hasExisting ? `${pulseShadow}, ${existing}` : pulseShadow,
+  };
+}
 
-  const pulseBlur2 = Math.round(blur2 * 1.18);
-  const pulseSpread2 = Math.round(spread2 * 1.18);
-  const pulseShadow = `0 0 ${blur1}px ${spread1}px ${vars.color}${innerAlpha}, 0 0 ${pulseBlur2}px ${pulseSpread2}px ${vars.color}${outerAlpha}`;
-
+export function setup(host: HTMLElement, vars: ResolvedVars): void {
   const existing = getComputedStyle(host).boxShadow;
-  const composedBase = existing && existing !== "none" ? `${baseShadow}, ${existing}` : baseShadow;
-  const composedPulse =
-    existing && existing !== "none" ? `${pulseShadow}, ${existing}` : pulseShadow;
+  const { composedBase, composedPulse } = computeShadows(vars, existing);
 
   host.style.boxShadow = composedBase;
-
   _anims.get(host)?.cancel();
 
   const dur = (4 / Math.max(0.1, vars.speed)) * 1000;
@@ -44,3 +36,4 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
   });
   _anims.set(host, anim);
 }
+

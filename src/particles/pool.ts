@@ -37,61 +37,63 @@ const ZERO: Mote = {
   angularVelocity: 0,
 };
 
-export class MotePool {
-  private readonly slots: Mote[];
-  private active = 0;
-  private cap: number;
+export interface MotePool {
+  slots: Mote[];
+  active: number;
+  cap: number;
+}
 
-  constructor(cap: number) {
-    this.cap = Math.max(0, Math.floor(cap));
-    this.slots = new Array<Mote>(this.cap);
-    for (let i = 0; i < this.cap; i++) this.slots[i] = { ...ZERO };
-  }
 
-  get activeCount(): number {
-    return this.active;
-  }
 
-  get currentCap(): number {
-    return this.cap;
-  }
+export function createMotePool(cap: number): MotePool {
+  const c = Math.max(0, Math.floor(cap));
+  const slots = new Array<Mote>(c);
+  for (let i = 0; i < c; i++) slots[i] = { ...ZERO };
+  return { slots, active: 0, cap: c };
+}
 
-  setCap(newCap: number): void {
-    const next = Math.max(0, Math.floor(newCap));
-    if (next < this.cap) this.cap = next;
-  }
+export function motePoolActiveCount(pool: MotePool): number {
+  return pool.active;
+}
 
-  spawn(init: Partial<Mote>): boolean {
-    if (this.active >= this.cap) return false;
-    const m = this.slots[this.active];
-    Object.assign(m, ZERO, init);
-    this.active += 1;
-    return true;
-  }
+export function motePoolCurrentCap(pool: MotePool): number {
+  return pool.cap;
+}
 
-  step(dt: number, t: number): void {
-    let i = 0;
-    while (i < this.active) {
-      const m = this.slots[i];
-      m.x += m.vx * dt;
-      m.y += m.vy * dt;
-      m.x += Math.sin(t * m.driftFreq) * m.driftAmp * dt;
-      m.y += Math.cos(t * m.driftFreq) * m.driftAmp * dt;
-      m.life -= dt;
-      m.phase += dt;
-      m.rotation += m.angularVelocity * dt;
-      if (m.life <= 0) {
-        const last = this.slots[this.active - 1];
-        this.slots[i] = last;
-        this.slots[this.active - 1] = m;
-        this.active -= 1;
-        continue;
-      }
-      i += 1;
+export function motePoolSetCap(pool: MotePool, newCap: number): void {
+  const next = Math.max(0, Math.floor(newCap));
+  if (next < pool.cap) pool.cap = next;
+}
+
+export function motePoolSpawn(pool: MotePool, init: Partial<Mote>): boolean {
+  if (pool.active >= pool.cap) return false;
+  const m = pool.slots[pool.active];
+  Object.assign(m, ZERO, init);
+  pool.active += 1;
+  return true;
+}
+
+export function motePoolStep(pool: MotePool, dt: number, t: number): void {
+  let i = 0;
+  while (i < pool.active) {
+    const m = pool.slots[i];
+    m.x += (m.vx + Math.sin(t * m.driftFreq) * m.driftAmp) * dt;
+    m.y += (m.vy + Math.cos(t * m.driftFreq) * m.driftAmp) * dt;
+    m.life -= dt;
+    m.phase += dt;
+    m.rotation += m.angularVelocity * dt;
+    if (m.life <= 0) {
+      pool.slots[i] = pool.slots[pool.active - 1];
+      pool.slots[pool.active - 1] = m;
+      pool.active -= 1;
+      continue;
     }
-  }
-
-  forEachActive(fn: (m: Mote) => void): void {
-    for (let i = 0; i < this.active; i++) fn(this.slots[i]);
+    i += 1;
   }
 }
+
+export function motePoolForEachActive(pool: MotePool, fn: (m: Mote) => void): void {
+  for (let i = 0; i < pool.active; i++) fn(pool.slots[i]);
+}
+
+

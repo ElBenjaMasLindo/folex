@@ -15,21 +15,30 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json && cp src/css/folex.css dist/folex.css",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "biome check src tests",
-    "format": "biome format --write src tests"
+    "format": "biome format --write src tests",
+    "gate": "eslint . && tsc --noEmit",
+    "prepare": "husky"
   },
-  "dependencies": {},
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
+    "@typescript-eslint/eslint-plugin": "8.48.1",
+    "@typescript-eslint/parser": "8.48.1",
+    "eslint": "9.39.5",
     "happy-dom": "20.10.6",
+    "husky": "9.1.7",
+    "sadist": "0.5.3",
+    "ts-pattern": "5.9.0",
     "tsup": "8.5.1",
-    "typescript": "7.0.2",
+    "typescript": "5.6.3",
     "vitest": "4.1.10"
   },
   "packageManager": "pnpm@11.9.0",
@@ -37,7 +46,17 @@
     "type": "git",
     "url": "git+https://github.com/ElBenjaMasLindo/folex.git"
   },
-  "keywords": ["css-effects", "glassmorphism", "particles", "canvas", "ripple", "glow", "llm-friendly", "zero-dependency", "visual-effects"],
+  "keywords": [
+    "css-effects",
+    "glassmorphism",
+    "particles",
+    "canvas",
+    "ripple",
+    "glow",
+    "llm-friendly",
+    "zero-dependency",
+    "visual-effects"
+  ],
   "author": "ElBenjaMasLindo",
   "homepage": "https://github.com/ElBenjaMasLindo/folex#readme",
   "bugs": {

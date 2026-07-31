@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Relicensed from MIT to MPL-2.0
+- Refactored entire codebase to strict `sadist` functional coding rules (zero `null`/`undefined` in domain code, branded types for handles, functional particle/physics modules, max 3 params, max 20 lines per function, complexity $\le 6$).
+
 
 ## [0.4.0] - 2026-07-26
 

@@ -3,46 +3,50 @@ type PhysicsTickFn = (dt: number) => boolean;
 const reducedMotion =
   typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-class PhysicsEngine {
-  private ticks = new Set<PhysicsTickFn>();
-  private raf = 0;
-  private lastT = 0;
-  private MAX_DT = 50;
 
-  register(fn: PhysicsTickFn): void {
-    if (reducedMotion) return;
-    this.ticks.add(fn);
-    this.syncLoop();
+const ticks = new Set<PhysicsTickFn>();
+let raf = 0;
+let lastT = 0;
+const MAX_DT = 50;
+
+function syncLoop(): void {
+  if (typeof requestAnimationFrame === "undefined") return;
+
+  if (ticks.size > 0 && !raf) {
+    lastT = 0;
+    raf = requestAnimationFrame(frame);
+  } else if (ticks.size === 0 && raf) {
+    cancelAnimationFrame(raf);
+    raf = 0;
   }
-
-  unregister(fn: PhysicsTickFn): void {
-    this.ticks.delete(fn);
-    this.syncLoop();
-  }
-
-  private syncLoop(): void {
-    if (typeof requestAnimationFrame === "undefined") return;
-
-    if (this.ticks.size > 0 && !this.raf) {
-      this.lastT = 0;
-      this.raf = requestAnimationFrame(this.frame);
-    } else if (this.ticks.size === 0 && this.raf) {
-      cancelAnimationFrame(this.raf);
-      this.raf = 0;
-    }
-  }
-
-  private frame = (t: number): void => {
-    this.raf = requestAnimationFrame(this.frame);
-    if (typeof document !== "undefined" && document.hidden) return;
-    const dt = this.lastT ? Math.min(this.MAX_DT, t - this.lastT) / 1000 : 0;
-    this.lastT = t;
-
-    for (const tick of Array.from(this.ticks)) {
-      if (!tick(dt)) this.ticks.delete(tick);
-    }
-    if (this.ticks.size === 0) this.syncLoop();
-  };
 }
 
-export const physicsEngine = new PhysicsEngine();
+function runPhysicsTicks(dt: number): void {
+  for (const tick of Array.from(ticks)) {
+    if (!tick(dt)) ticks.delete(tick);
+  }
+}
+
+function frame(t: number): void {
+  raf = requestAnimationFrame(frame);
+  if (typeof document !== "undefined" && document.hidden) return;
+  const dt = lastT ? Math.min(MAX_DT, t - lastT) / 1000 : 0;
+  lastT = t;
+
+  runPhysicsTicks(dt);
+  if (ticks.size === 0) syncLoop();
+}
+
+
+export const physicsEngine = {
+  register(fn: PhysicsTickFn): void {
+    if (reducedMotion) return;
+    ticks.add(fn);
+    syncLoop();
+  },
+  unregister(fn: PhysicsTickFn): void {
+    ticks.delete(fn);
+    syncLoop();
+  },
+};
+

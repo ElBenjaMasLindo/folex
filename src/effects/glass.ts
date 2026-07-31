@@ -15,32 +15,43 @@ const GAMUT_CORRECTIONS: GamutCorrection[] = [
 ];
 
 // Canvas pixel readback resolves any CSS color (hsl, oklch, named, etc.) to concrete RGB.
-let _colorParseCanvas: HTMLCanvasElement | null = null;
+import { Option } from "../core/functional";
 
-function hueFromColor(cssColor: string): number {
-  if (!_colorParseCanvas) {
-    _colorParseCanvas = document.createElement("canvas");
-    _colorParseCanvas.width = 1;
-    _colorParseCanvas.height = 1;
+let _colorParseCanvas: Option<HTMLCanvasElement> = Option.none();
+
+
+function parseRgb(cssColor: string): [number, number, number] {
+  if (!_colorParseCanvas.some) {
+    const el = document.createElement("canvas");
+    el.width = 1;
+    el.height = 1;
+    _colorParseCanvas = Option.some(el);
   }
-  const ctx = _colorParseCanvas.getContext("2d", { willReadFrequently: true });
-  if (!ctx) return 0;
+  const canvasOpt = _colorParseCanvas;
+  if (!canvasOpt.some) return [0, 0, 0];
+  const ctx = canvasOpt.value.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return [0, 0, 0];
+
 
   ctx.clearRect(0, 0, 1, 1);
   ctx.fillStyle = cssColor;
   ctx.fillRect(0, 0, 1, 1);
+  const data = ctx.getImageData(0, 0, 1, 1).data;
+  return [data[0], data[1], data[2]];
+}
 
-  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
 
+
+function hueFromColor(cssColor: string): number {
+  const [r, g, b] = parseRgb(cssColor);
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   if (max === min) return 0;
 
   const delta = max - min;
-  let h: number;
-  if (max === r) h = ((g - b) / delta + (g < b ? 6 : 0)) * 60;
-  else if (max === g) h = ((b - r) / delta + 2) * 60;
-  else h = ((r - g) / delta + 4) * 60;
+  const h = max === r ? ((g - b) / delta + (g < b ? 6 : 0)) * 60
+    : max === g ? ((b - r) / delta + 2) * 60
+    : ((r - g) / delta + 4) * 60;
   return Math.round(h);
 }
 
@@ -61,46 +72,38 @@ function getAestheticColor(baseHue: number): string {
   return `oklch(${l.toFixed(1)}% ${c.toFixed(3)} ${normHue.toFixed(1)})`;
 }
 
-export function setup(host: HTMLElement, vars: ResolvedVars): void {
-  const baseHue = hueFromColor(vars.color);
+function applyGlassProperties(clip: HTMLDivElement, vars: ResolvedVars, cfg: { stops: string; dur: number; center: number }): void {
+  clip.style.setProperty("--fx-glass-frost-blur", `${vars.glassBlur}px`);
+  clip.style.setProperty("--fx-glass-frost-sat", `${vars.glassSaturate}%`);
+  clip.style.setProperty("--fx-glass-frost-shadow", `inset 0 0 40px color-mix(in oklch, ${vars.color} ${Math.round(vars.glassTint * 100)}%, transparent)`);
+  clip.style.setProperty("--fx-glass-spectrum-bg", `linear-gradient(135deg, ${cfg.stops})`);
+  clip.style.setProperty("--fx-glass-spectrum-op", String(vars.glassIntensity * 0.4));
+  clip.style.setProperty("--fx-glass-spectrum-dur", `${cfg.dur.toFixed(2)}s`);
+  clip.style.setProperty("--fx-glass-chroma-op", String(vars.glassIntensity * vars.glassChroma));
+  clip.style.setProperty("--fx-glass-chroma-c1", getAestheticColor(cfg.center + 40));
+  clip.style.setProperty("--fx-glass-chroma-c2", getAestheticColor(cfg.center - 40));
+}
 
+function createGlassClip(vars: ResolvedVars, baseHue: number): HTMLDivElement {
   const instanceShift = Math.random() * 40 - 20;
   const dir = Math.random() > 0.5 ? 1 : -1;
   const hueCenter = baseHue + instanceShift;
-
   const offsets = [-120, -80, -40, 0, 40, 80, 120];
-  const gradientStops = offsets
-    .map((offset) => getAestheticColor(hueCenter + offset * dir))
-    .join(", ");
-
-  const speedVariance = 1 + (Math.random() * 0.4 - 0.2);
-  const specDur = (8 / Math.max(0.1, vars.glassSpectrumSpeed)) * speedVariance;
-
-  const chromaC1 = getAestheticColor(hueCenter + 40);
-  const chromaC2 = getAestheticColor(hueCenter - 40);
+  const stops = offsets.map((off) => getAestheticColor(hueCenter + off * dir)).join(", ");
+  const dur = (8 / Math.max(0.1, vars.glassSpectrumSpeed)) * (1 + (Math.random() * 0.4 - 0.2));
 
   const clip = document.createElement("div");
   clip.className = "fx-glass-clip";
+  applyGlassProperties(clip, vars, { stops, dur, center: hueCenter });
+  clip.innerHTML = `<div class="fx-glass-prism"></div><div class="fx-layer fx-glass-spectrum"></div><div class="fx-layer fx-glass-chroma"></div><div class="fx-layer fx-glass-highlight"></div>`;
+  return clip;
+}
 
-  clip.style.setProperty("--fx-glass-frost-blur", `${vars.glassBlur}px`);
-  clip.style.setProperty("--fx-glass-frost-sat", `${vars.glassSaturate}%`);
-  clip.style.setProperty(
-    "--fx-glass-frost-shadow",
-    `inset 0 0 40px color-mix(in oklch, ${vars.color} ${Math.round(vars.glassTint * 100)}%, transparent)`,
-  );
-  clip.style.setProperty("--fx-glass-spectrum-bg", `linear-gradient(135deg, ${gradientStops})`);
-  clip.style.setProperty("--fx-glass-spectrum-op", String(vars.glassIntensity * 0.4));
-  clip.style.setProperty("--fx-glass-spectrum-dur", `${specDur.toFixed(2)}s`);
-  clip.style.setProperty("--fx-glass-chroma-op", String(vars.glassIntensity * vars.glassChroma));
-  clip.style.setProperty("--fx-glass-chroma-c1", chromaC1);
-  clip.style.setProperty("--fx-glass-chroma-c2", chromaC2);
 
-  clip.innerHTML = `
-    <div class="fx-glass-prism"></div>
-    <div class="fx-layer fx-glass-spectrum"></div>
-    <div class="fx-layer fx-glass-chroma"></div>
-    <div class="fx-layer fx-glass-highlight"></div>
-  `;
+
+export function setup(host: HTMLElement, vars: ResolvedVars): void {
+  const baseHue = hueFromColor(vars.color);
+  const clip = createGlassClip(vars, baseHue);
 
   if (window.getComputedStyle(host).position === "static") {
     host.style.position = "relative";
@@ -108,3 +111,4 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
   host.style.zIndex = "0";
   host.appendChild(clip);
 }
+

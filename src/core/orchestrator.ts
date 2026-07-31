@@ -15,6 +15,18 @@ function ensurePosition(host: HTMLElement): void {
   if (cs.zIndex === "auto") host.style.zIndex = "0";
 }
 
+function applyEffects(host: HTMLElement, names: string[], vars: ResolvedVars): void {
+  ensurePosition(host);
+  for (const name of names) {
+    const setup = registry[name];
+    if (setup) {
+      try {
+        setup(host, vars);
+      } catch {}
+    }
+  }
+}
+
 function bindHost(host: HTMLElement): void {
   if (host.hasAttribute(BOUND)) return;
   const raw = host.getAttribute(ATTR);
@@ -23,18 +35,10 @@ function bindHost(host: HTMLElement): void {
   if (names.length === 0) return;
 
   const vars: ResolvedVars = resolveVars(host);
-  ensurePosition(host);
-  for (const name of names) {
-    const setup = registry[name];
-    if (!setup) continue;
-    try {
-      setup(host, vars);
-    } catch {
-      // A thrown error in a single effect never breaks the rest of the page.
-    }
-  }
+  applyEffects(host, names, vars);
   host.setAttribute(BOUND, "");
 }
+
 
 function scan(root: ParentNode): void {
   const hosts = root.querySelectorAll<HTMLElement>(`[${ATTR}]`);

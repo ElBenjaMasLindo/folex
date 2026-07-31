@@ -10,14 +10,16 @@ const WINDOW = 30;
 const BUDGET_MS = 20;
 const ORDER: Tier[] = ["cinematic", "balanced", "eco"];
 
+function getHardwareMetric(): number {
+  if (typeof navigator === "undefined") return 8;
+  const cores = navigator.hardwareConcurrency ?? 8;
+  const mem = (navigator as { deviceMemory?: number }).deviceMemory ?? 8;
+  return Math.min(cores, mem);
+}
+
 export function detectInitialTier(explicit?: Tier): Tier {
   if (explicit && ORDER.includes(explicit)) return explicit;
-  const nav = typeof navigator !== "undefined" ? navigator : undefined;
-  const cores = nav?.hardwareConcurrency;
-  const mem = (nav as { deviceMemory?: number } | undefined)?.deviceMemory;
-  if (typeof cores === "number" && cores <= 4) return "eco";
-  if (typeof mem === "number" && mem <= 4) return "eco";
-  return "balanced";
+  return getHardwareMetric() <= 4 ? "eco" : "balanced";
 }
 
 let downgraded = false;
@@ -28,8 +30,11 @@ function median(values: number[]): number {
   if (values.length === 0) return 0;
   const sorted = [...values].sort((a, b) => a - b);
   const mid = sorted.length >> 1;
-  if (sorted.length % 2 === 1) return sorted[mid];
-  return (sorted[mid - 1] + sorted[mid]) / 2;
+  return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+function updateSlowWindows(med: number): void {
+  slowWindows = med > BUDGET_MS ? slowWindows + 1 : 0;
 }
 
 export function recordFrameTime(
@@ -43,11 +48,7 @@ export function recordFrameTime(
 
   const med = median(buffer);
   buffer = [];
-  if (med > BUDGET_MS) {
-    slowWindows += 1;
-  } else {
-    slowWindows = 0;
-  }
+  updateSlowWindows(med);
 
   if (slowWindows >= 2) {
     downgraded = true;
@@ -55,6 +56,7 @@ export function recordFrameTime(
     if (idx >= 0 && idx < ORDER.length - 1) onDowngrade(ORDER[idx + 1] as Tier);
   }
 }
+
 
 export function __resetQualityForTests(): void {
   downgraded = false;

@@ -1,32 +1,29 @@
-/**
- * Semi-implicit Euler integration of a damped harmonic oscillator.
- * Returns new [position, velocity].
- *
- * equation: a = -stiffness * (pos - target) - damping * vel
- */
+export interface SpringConfig {
+  stiffness: number;
+  damping: number;
+}
+
+export interface SpringState {
+  pos: number;
+  vel: number;
+}
+
 export function springStep(
-  pos: number,
-  vel: number,
+  state: SpringState,
   target: number,
-  stiffness: number,
-  damping: number,
-  dt: number,
+  config: SpringConfig & { dt: number },
 ): [number, number] {
-  const a = -stiffness * (pos - target) - damping * vel;
-  const newVel = vel + a * dt;
-  const newPos = pos + newVel * dt;
+  const a = -config.stiffness * (state.pos - target) - config.damping * state.vel;
+  const newVel = state.vel + a * config.dt;
+  const newPos = state.pos + newVel * config.dt;
   return [newPos, newVel];
 }
 
-/**
- * Returns true when spring is at rest
- * (position close enough to target AND velocity near zero).
- */
 export function springAtRest(
-  pos: number,
-  vel: number,
+  state: SpringState,
   target: number,
   epsilon: number = 0.01,
 ): boolean {
-  return Math.abs(pos - target) < epsilon && Math.abs(vel) < epsilon;
+  return Math.abs(state.pos - target) < epsilon && Math.abs(state.vel) < epsilon;
 }
+

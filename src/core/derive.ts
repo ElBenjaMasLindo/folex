@@ -1,5 +1,6 @@
 import type { BoundsLevel } from "../particles/pool";
-import { enumMatch, numberInRange, safeColor } from "./validate";
+import { type RawInput, enumMatch, numberInRange, safeColor } from "./validate";
+
 
 export type BlendMode =
   | "screen"
@@ -49,7 +50,7 @@ type Row<T> = {
     keyof ResolvedVars,
     "color" | "radius" | "rippleField" | "glowBlend" | "rippleBlend" | "pixieBounds"
   >;
-  validate: (raw: string | null, fallback: T) => T;
+  validate: (raw: RawInput | unknown, fallback: T) => T;
   fallback: T;
 };
 
@@ -147,22 +148,15 @@ function isUsableColor(value: string): boolean {
   return true;
 }
 
-export function resolveVars(host: HTMLElement): ResolvedVars {
-  const style = getComputedStyle(host);
-
+function resolveColors(style: CSSStyleDeclaration): { color: string; radius: string } {
   const explicit = safeColor(style.getPropertyValue("--fx-color"), "");
-  const color =
-    explicit && isUsableColor(explicit) ? explicit : deriveColor(style) || FALLBACK_COLOR;
+  const color = explicit && isUsableColor(explicit) ? explicit : deriveColor(style) || FALLBACK_COLOR;
+  const radius = style.borderRadius && style.borderRadius.trim() !== "" ? style.borderRadius : "0px";
+  return { color, radius };
+}
 
-  const radius =
-    style.borderRadius && style.borderRadius.trim() !== "" ? style.borderRadius : "0px";
-
-  const vars: ResolvedVars = {
-    color,
-    radius,
-    speed: 1,
-    glowIntensity: 0.6,
-    glowBlend: "overlay",
+function resolveRippleDefaults(): Partial<ResolvedVars> {
+  return {
     rippleIntensity: 0.6,
     rippleScale: 1,
     rippleLayers: 1,
@@ -171,20 +165,51 @@ export function resolveVars(host: HTMLElement): ResolvedVars {
     rippleDistort: 0,
     rippleBlur: 12,
     rippleTint: 0.15,
-    pixieDensity: 1.25,
-    pixieBounds: "normal",
-    pixieScale: 1,
+  };
+}
+
+function resolveGlassDefaults(): Partial<ResolvedVars> {
+  return {
     glassIntensity: 0.6,
     glassBlur: 12,
     glassSaturate: 180,
     glassChroma: 0.3,
     glassSpectrumSpeed: 1,
     glassTint: 0.15,
+  };
+}
+
+function resolveDefaults(style: CSSStyleDeclaration): ResolvedVars {
+  const { color, radius } = resolveColors(style);
+  return {
+    color,
+    radius,
+    speed: 1,
+    glowIntensity: 0.6,
+    glowBlend: "overlay",
+    pixieDensity: 1.25,
+    pixieBounds: "normal",
+    pixieScale: 1,
     expTiltMax: 15,
     expTiltPerspective: 800,
     expTiltScale: 1.05,
     expTiltSpeed: 1,
-  };
+    ...resolveRippleDefaults(),
+    ...resolveGlassDefaults(),
+  } as ResolvedVars;
+}
+
+
+function resolveEnums(style: CSSStyleDeclaration, vars: ResolvedVars): void {
+  vars.rippleField = enumMatch(FIELD_VALUES)(style.getPropertyValue("--fx-ripple-field"), "turbulence");
+  vars.glowBlend = enumMatch(BLEND_VALUES)(style.getPropertyValue("--fx-glow-blend"), "overlay");
+  vars.rippleBlend = enumMatch(BLEND_VALUES)(style.getPropertyValue("--fx-ripple-blend"), "overlay");
+  vars.pixieBounds = enumMatch(BOUNDS_VALUES)(style.getPropertyValue("--fx-pixie-bounds"), "normal");
+}
+
+export function resolveVars(host: HTMLElement): ResolvedVars {
+  const style = getComputedStyle(host);
+  const vars = resolveDefaults(style);
 
   for (const row of TABLE) {
     const raw = style.getPropertyValue(row.prop);
@@ -192,19 +217,7 @@ export function resolveVars(host: HTMLElement): ResolvedVars {
   }
 
   vars.rippleLayers = Math.round(vars.rippleLayers);
-
-  const rippleFieldRaw = style.getPropertyValue("--fx-ripple-field");
-  vars.rippleField = enumMatch(FIELD_VALUES)(rippleFieldRaw, "turbulence");
-
-  const glowBlendRaw = style.getPropertyValue("--fx-glow-blend");
-  vars.glowBlend = enumMatch(BLEND_VALUES)(glowBlendRaw, "overlay");
-
-  const rippleBlendRaw = style.getPropertyValue("--fx-ripple-blend");
-  vars.rippleBlend = enumMatch(BLEND_VALUES)(rippleBlendRaw, "overlay");
-
-  const pixieBoundsRaw = style.getPropertyValue("--fx-pixie-bounds");
-  vars.pixieBounds = enumMatch(BOUNDS_VALUES)(pixieBoundsRaw, "normal");
-
+  resolveEnums(style, vars);
   return vars;
 }
 
@@ -212,6 +225,6 @@ function deriveColor(style: CSSStyleDeclaration): string {
   const cc = style.color;
   if (isUsableColor(cc)) return safeColor(cc, "");
   const bg = style.backgroundColor;
-  if (isUsableColor(bg)) return safeColor(bg, "");
-  return "";
+  return isUsableColor(bg) ? safeColor(bg, "") : "";
 }
+
