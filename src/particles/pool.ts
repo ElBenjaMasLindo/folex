@@ -43,8 +43,6 @@ export interface MotePool {
   cap: number;
 }
 
-
-
 export function createMotePool(cap: number): MotePool {
   const c = Math.max(0, Math.floor(cap));
   const slots = new Array<Mote>(c);
@@ -95,5 +93,3 @@ export function motePoolStep(pool: MotePool, dt: number, t: number): void {
 export function motePoolForEachActive(pool: MotePool, fn: (m: Mote) => void): void {
   for (let i = 0; i < pool.active; i++) fn(pool.slots[i]);
 }
-
-

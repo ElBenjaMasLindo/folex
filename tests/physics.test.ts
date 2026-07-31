@@ -23,4 +23,3 @@ describe("springAtRest", () => {
     expect(springAtRest({ pos: 8, vel: 0 }, 10)).toBe(false);
   });
 });
-

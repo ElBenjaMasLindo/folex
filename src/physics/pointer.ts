@@ -54,4 +54,3 @@ export function ensurePointerListeners(): void {
     { passive: true },
   );
 }
-

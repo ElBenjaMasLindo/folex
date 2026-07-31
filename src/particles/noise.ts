@@ -54,6 +54,20 @@ function buildValueNoiseGrids(octaves: number, seed: number) {
   return { grids, amps, totalAmp };
 }
 
+function sampleNoiseAcc(cfg: {
+  pt: { x: number; y: number; size: number };
+  o: number;
+  grids: Float32Array[];
+  amps: number[];
+}): number {
+  let acc = 0;
+  for (let i = 0; i < cfg.o; i++) {
+    const dim = 8 << i;
+    acc += bilinear({ grid: cfg.grids[i], dim, fx: (cfg.pt.x / cfg.pt.size) * dim, fy: (cfg.pt.y / cfg.pt.size) * dim }) * cfg.amps[i];
+  }
+  return acc;
+}
+
 export function valueNoiseTexture(size: number, seed: number, octaves = 2): ImageData {
   const o = Math.max(1, Math.min(3, Math.floor(octaves)));
   const data = new Uint8ClampedArray(size * size * 4);
@@ -61,10 +75,7 @@ export function valueNoiseTexture(size: number, seed: number, octaves = 2): Imag
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
-      let acc = 0;
-      for (let i = 0; i < o; i++) {
-        acc += bilinear({ grid: grids[i], dim: 8 << i, fx: (x / size) * (8 << i), fy: (y / size) * (8 << i) }) * amps[i];
-      }
+      const acc = sampleNoiseAcc({ pt: { x, y, size }, o, grids, amps });
       const b = ((acc / totalAmp) * 255) | 0;
       const idx = (y * size + x) * 4;
       data[idx] = b; data[idx + 1] = b; data[idx + 2] = b; data[idx + 3] = 255;
@@ -73,7 +84,13 @@ export function valueNoiseTexture(size: number, seed: number, octaves = 2): Imag
   return new ImageData(data, size, size);
 }
 
-function minDistanceToPoints(x: number, y: number, pts: { px: Float32Array; py: Float32Array; size: number }): number {
+
+
+function minDistanceToPoints(
+  x: number,
+  y: number,
+  pts: { px: Float32Array; py: Float32Array; size: number },
+): number {
   let min = Infinity;
   for (let i = 0; i < pts.px.length; i++) {
     let dx = Math.abs(x - pts.px[i]);
@@ -90,7 +107,10 @@ function calcCellularMins(size: number, k: number, seed: number) {
   const rng = mulberry32(seed);
   const px = new Float32Array(k);
   const py = new Float32Array(k);
-  for (let i = 0; i < k; i++) { px[i] = rng() * size; py[i] = rng() * size; }
+  for (let i = 0; i < k; i++) {
+    px[i] = rng() * size;
+    py[i] = rng() * size;
+  }
   const mins = new Float32Array(size * size);
   let maxMin = 0;
   for (let y = 0; y < size; y++) {
@@ -102,7 +122,6 @@ function calcCellularMins(size: number, k: number, seed: number) {
   }
   return { mins, maxMin };
 }
-
 
 export function cellularNoiseTexture(size: number, seed: number, density: number): ImageData {
   const k = Math.max(2, Math.min(24, Math.round(6 + density * 6)));
@@ -122,4 +141,3 @@ export function cellularNoiseTexture(size: number, seed: number, density: number
   }
   return new ImageData(data, size, size);
 }
-

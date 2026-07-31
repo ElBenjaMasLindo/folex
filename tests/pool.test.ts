@@ -87,4 +87,3 @@ describe("MotePool — setCap shrink", () => {
     expect(motePoolSpawn(p, { life: 1 })).toBe(false);
   });
 });
-

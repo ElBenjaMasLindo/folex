@@ -19,11 +19,6 @@ export function springStep(
   return [newPos, newVel];
 }
 
-export function springAtRest(
-  state: SpringState,
-  target: number,
-  epsilon: number = 0.01,
-): boolean {
+export function springAtRest(state: SpringState, target: number, epsilon: number = 0.01): boolean {
   return Math.abs(state.pos - target) < epsilon && Math.abs(state.vel) < epsilon;
 }
-

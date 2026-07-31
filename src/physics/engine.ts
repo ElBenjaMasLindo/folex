@@ -3,7 +3,6 @@ type PhysicsTickFn = (dt: number) => boolean;
 const reducedMotion =
   typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-
 const ticks = new Set<PhysicsTickFn>();
 let raf = 0;
 let lastT = 0;
@@ -37,7 +36,6 @@ function frame(t: number): void {
   if (ticks.size === 0) syncLoop();
 }
 
-
 export const physicsEngine = {
   register(fn: PhysicsTickFn): void {
     if (reducedMotion) return;
@@ -49,4 +47,3 @@ export const physicsEngine = {
     syncLoop();
   },
 };
-

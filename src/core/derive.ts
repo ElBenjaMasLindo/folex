@@ -1,7 +1,6 @@
 import type { BoundsLevel } from "../particles/pool";
 import { type RawInput, enumMatch, numberInRange, safeColor } from "./validate";
 
-
 export type BlendMode =
   | "screen"
   | "multiply"
@@ -150,8 +149,10 @@ function isUsableColor(value: string): boolean {
 
 function resolveColors(style: CSSStyleDeclaration): { color: string; radius: string } {
   const explicit = safeColor(style.getPropertyValue("--fx-color"), "");
-  const color = explicit && isUsableColor(explicit) ? explicit : deriveColor(style) || FALLBACK_COLOR;
-  const radius = style.borderRadius && style.borderRadius.trim() !== "" ? style.borderRadius : "0px";
+  const color =
+    explicit && isUsableColor(explicit) ? explicit : deriveColor(style) || FALLBACK_COLOR;
+  const radius =
+    style.borderRadius && style.borderRadius.trim() !== "" ? style.borderRadius : "0px";
   return { color, radius };
 }
 
@@ -199,12 +200,20 @@ function resolveDefaults(style: CSSStyleDeclaration): ResolvedVars {
   } as ResolvedVars;
 }
 
-
 function resolveEnums(style: CSSStyleDeclaration, vars: ResolvedVars): void {
-  vars.rippleField = enumMatch(FIELD_VALUES)(style.getPropertyValue("--fx-ripple-field"), "turbulence");
+  vars.rippleField = enumMatch(FIELD_VALUES)(
+    style.getPropertyValue("--fx-ripple-field"),
+    "turbulence",
+  );
   vars.glowBlend = enumMatch(BLEND_VALUES)(style.getPropertyValue("--fx-glow-blend"), "overlay");
-  vars.rippleBlend = enumMatch(BLEND_VALUES)(style.getPropertyValue("--fx-ripple-blend"), "overlay");
-  vars.pixieBounds = enumMatch(BOUNDS_VALUES)(style.getPropertyValue("--fx-pixie-bounds"), "normal");
+  vars.rippleBlend = enumMatch(BLEND_VALUES)(
+    style.getPropertyValue("--fx-ripple-blend"),
+    "overlay",
+  );
+  vars.pixieBounds = enumMatch(BOUNDS_VALUES)(
+    style.getPropertyValue("--fx-pixie-bounds"),
+    "normal",
+  );
 }
 
 export function resolveVars(host: HTMLElement): ResolvedVars {
@@ -227,4 +236,3 @@ function deriveColor(style: CSSStyleDeclaration): string {
   const bg = style.backgroundColor;
   return isUsableColor(bg) ? safeColor(bg, "") : "";
 }
-

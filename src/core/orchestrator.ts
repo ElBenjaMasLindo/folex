@@ -39,7 +39,6 @@ function bindHost(host: HTMLElement): void {
   host.setAttribute(BOUND, "");
 }
 
-
 function scan(root: ParentNode): void {
   const hosts = root.querySelectorAll<HTMLElement>(`[${ATTR}]`);
   for (const host of hosts) bindHost(host);

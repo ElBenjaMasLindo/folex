@@ -57,7 +57,6 @@ export function recordFrameTime(
   }
 }
 
-
 export function __resetQualityForTests(): void {
   downgraded = false;
   buffer = [];

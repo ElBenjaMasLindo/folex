@@ -8,7 +8,6 @@ export type HostId = number & { readonly __brand: "HostId" };
 
 let tintCanvas: Option<HTMLCanvasElement> = Option.none();
 
-
 function seedFor(hostId: HostId, layer: number): number {
   return ((hostId as number) * 0x1000 + layer + 1) >>> 0;
 }
@@ -25,12 +24,10 @@ function getTintCtx(size: number): Option<CanvasRenderingContext2D> {
     tintCanvas = Option.some(el);
   }
   const tc = tintCanvas;
-  return tc.some ? Option.fromNullable(tc.value.getContext("2d") as CanvasRenderingContext2D) : Option.none();
+  return tc.some
+    ? Option.fromNullable(tc.value.getContext("2d") as CanvasRenderingContext2D)
+    : Option.none();
 }
-
-
-
-
 
 function tintedTexture(vars: ResolvedVars, seed: number): string {
   const size = 128;
@@ -38,16 +35,20 @@ function tintedTexture(vars: ResolvedVars, seed: number): string {
   if (!ctxOpt.some) return "";
   const ctx = ctxOpt.value;
 
-  const tex = vars.rippleField === "cellular"
-    ? cellularNoiseTexture(size, seed, vars.rippleScale)
-    : valueNoiseTexture(size, seed, 2);
+  const tex =
+    vars.rippleField === "cellular"
+      ? cellularNoiseTexture(size, seed, vars.rippleScale)
+      : valueNoiseTexture(size, seed, 2);
   ctx.putImageData(tex, 0, 0);
   ctx.globalCompositeOperation = "multiply";
   ctx.fillStyle = vars.color;
   ctx.fillRect(0, 0, size, size);
-  try { return tintCanvas.some ? tintCanvas.value.toDataURL("image/png") : ""; } catch { return ""; }
+  try {
+    return tintCanvas.some ? tintCanvas.value.toDataURL("image/png") : "";
+  } catch {
+    return "";
+  }
 }
-
 
 function createRippleLayer(
   vars: ResolvedVars,
@@ -83,5 +84,3 @@ export function setup(host: HTMLElement, vars: ResolvedVars): void {
   }
   host.appendChild(clip);
 }
-
-

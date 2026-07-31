@@ -10,8 +10,6 @@ function toOpt(raw: RawInput | unknown): Option<string> {
   return raw as Option<string>;
 }
 
-
-
 function clamp(n: number, min: number, max: number): number {
   if (n < min) return min;
   if (n > max) return max;
@@ -52,5 +50,3 @@ export const safeColor: Validator<string> = (raw, fallback) => {
   if (value.length === 0) return fallback;
   return checkCssSupport(value) ? value : fallback;
 };
-
-

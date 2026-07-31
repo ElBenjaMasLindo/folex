@@ -1,6 +1,4 @@
-
 type AnyCanvas = HTMLCanvasElement | OffscreenCanvas;
-
 
 const cache = new Map<string, AnyCanvas>();
 
@@ -26,11 +24,7 @@ export interface RayConfig {
 
 type AnyContext = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
-function ray(
-  ctx: AnyContext,
-  center: { cx: number; cy: number },
-  cfg: RayConfig,
-): void {
+function ray(ctx: AnyContext, center: { cx: number; cy: number }, cfg: RayConfig): void {
   const rad = (cfg.angleDeg * Math.PI) / 180;
   const dx = Math.cos(rad);
   const dy = Math.sin(rad);
@@ -46,7 +40,6 @@ function ray(
 }
 
 function drawSpriteRays(ctx: AnyContext, center: { cx: number; cy: number }, sizePx: number): void {
-  ctx.fillStyle = ctx.fillStyle;
   for (const a of [0, 90, 180, 270]) {
     ray(ctx, center, { length: sizePx * 0.5, baseWidth: sizePx * 0.12, angleDeg: a });
   }
@@ -83,9 +76,6 @@ export function buildSprite(color: string, sizePx: number): AnyCanvas {
     drawSpritePattern(rawCtx as AnyContext, color, sizePx);
   }
 
-
   cache.set(key, canvas);
   return canvas;
 }
-
-

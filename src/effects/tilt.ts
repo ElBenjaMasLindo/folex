@@ -25,14 +25,34 @@ interface TiltState {
   hovering: boolean;
 }
 
-function applyTiltSprings(state: TiltState, targets: { tRotX: number; tRotY: number; tSc: number }, cfg: { speed: number; springCfg: { stiffness: number; damping: number }; dt: number }) {
+function applyTiltSprings(
+  state: TiltState,
+  targets: { tRotX: number; tRotY: number; tSc: number },
+  cfg: { speed: number; springCfg: { stiffness: number; damping: number }; dt: number },
+) {
   const [rx, vx] = springStep(state.sX, targets.tRotX, { ...cfg.springCfg, dt: cfg.dt });
   state.sX = { pos: rx, vel: vx };
   const [ry, vy] = springStep(state.sY, targets.tRotY, { ...cfg.springCfg, dt: cfg.dt });
   state.sY = { pos: ry, vel: vy };
-  const [sc, scv] = springStep(state.sSc, targets.tSc, { stiffness: 200 * cfg.speed, damping: 10, dt: cfg.dt });
+  const [sc, scv] = springStep(state.sSc, targets.tSc, {
+    stiffness: 200 * cfg.speed,
+    damping: 10,
+    dt: cfg.dt,
+  });
   state.sSc = { pos: sc, vel: scv };
   return { rx, ry, sc };
+}
+
+function checkTiltRest(state: TiltState, targets: { tRotX: number; tRotY: number; tSc: number }): boolean {
+  return (
+    springAtRest(state.sX, targets.tRotX, 0.001) &&
+    springAtRest(state.sY, targets.tRotY, 0.001) &&
+    springAtRest(state.sSc, targets.tSc, 0.0001)
+  );
+}
+
+function formatTiltTransform(vars: ResolvedVars, res: { rx: number; ry: number; sc: number }): string {
+  return `perspective(${vars.expTiltPerspective}px) rotateX(${res.rx.toFixed(2)}deg) rotateY(${res.ry.toFixed(2)}deg) scale3d(${res.sc.toFixed(4)},${res.sc.toFixed(4)},1)`;
 }
 
 function createTiltTicker(ctx: { host: HTMLElement; vars: ResolvedVars }, state: TiltState, onReset: () => void) {
@@ -41,11 +61,10 @@ function createTiltTicker(ctx: { host: HTMLElement; vars: ResolvedVars }, state:
   return (dt: number): boolean => {
     if (!ctx.host.isConnected) return false;
     const targets = computeTargetTilt(ctx.host, ctx.vars, state.hovering);
-    const { rx, ry, sc } = applyTiltSprings(state, targets, { speed, springCfg, dt });
-    ctx.host.style.transform = `perspective(${ctx.vars.expTiltPerspective}px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) scale3d(${sc.toFixed(4)},${sc.toFixed(4)},1)`;
+    const res = applyTiltSprings(state, targets, { speed, springCfg, dt });
+    ctx.host.style.transform = formatTiltTransform(ctx.vars, res);
 
-    const atRest = springAtRest(state.sX, targets.tRotX, 0.001) && springAtRest(state.sY, targets.tRotY, 0.001) && springAtRest(state.sSc, targets.tSc, 0.0001);
-    if (atRest && !state.hovering) {
+    if (checkTiltRest(state, targets) && !state.hovering) {
       ctx.host.style.transform = "";
       onReset();
       return false;
@@ -54,26 +73,28 @@ function createTiltTicker(ctx: { host: HTMLElement; vars: ResolvedVars }, state:
   };
 }
 
-export function setup(host: HTMLElement, vars: ResolvedVars): void {
-  ensurePointerListeners();
-  host.style.transformStyle = "preserve-3d";
-  const state: TiltState = { sX: { pos: 0, vel: 0 }, sY: { pos: 0, vel: 0 }, sSc: { pos: 1, vel: 0 }, hovering: false };
+function attachTiltEvents(ctx: { host: HTMLElement; vars: ResolvedVars }, state: TiltState, tick: (dt: number) => boolean): void {
   let registered = false;
-  const tick = createTiltTicker({ host, vars }, state, () => { registered = false; });
-
-  host.addEventListener("pointerenter", () => {
+  ctx.host.addEventListener("pointerenter", () => {
     state.hovering = true;
     if (!registered) { registered = true; physicsEngine.register(tick); }
   }, { passive: true });
 
-  host.addEventListener("pointerleave", () => {
+  ctx.host.addEventListener("pointerleave", () => {
     if (!state.hovering) return;
     state.hovering = false;
-    state.sX.vel -= state.sX.pos * 2.0 * Math.sqrt(vars.expTiltSpeed);
-    state.sY.vel -= state.sY.pos * 2.0 * Math.sqrt(vars.expTiltSpeed);
+    const sp = Math.sqrt(ctx.vars.expTiltSpeed);
+    state.sX.vel -= state.sX.pos * 2.0 * sp;
+    state.sY.vel -= state.sY.pos * 2.0 * sp;
   }, { passive: true });
 }
 
-
+export function setup(host: HTMLElement, vars: ResolvedVars): void {
+  ensurePointerListeners();
+  host.style.transformStyle = "preserve-3d";
+  const state: TiltState = { sX: { pos: 0, vel: 0 }, sY: { pos: 0, vel: 0 }, sSc: { pos: 1, vel: 0 }, hovering: false };
+  const tick = createTiltTicker({ host, vars }, state, () => {});
+  attachTiltEvents({ host, vars }, state, tick);
+}
 
 
