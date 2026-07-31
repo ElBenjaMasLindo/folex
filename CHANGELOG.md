@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+ ### Removed
+
+- Removed Biome (`@biomejs/biome`) to consolidate all code formatting and linting under ESLint with strict `sadist` rules.
+
+### Changed
+
+- Updated `pnpm run format` script to use `eslint . --fix` instead of `biome format`.
+
 ## [0.4.1] - 2026-07-31
 
 ### Changed

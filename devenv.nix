@@ -1,9 +1,6 @@
 { pkgs, ... }:
 
 {
-  packages = [ pkgs.biome ];
-  env.BIOME_BINARY = "${pkgs.biome}/bin/biome";
-
   languages = {
     # https://devenv.sh/languages/javascript/
     javascript = {
