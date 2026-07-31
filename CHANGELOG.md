@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-07-31
+
  ### Removed
 
 - Removed Biome (`@biomejs/biome`) to consolidate all code formatting and linting under ESLint with strict `sadist` rules.

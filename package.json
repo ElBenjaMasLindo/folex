@@ -4,7 +4,7 @@
   "keywords": ["css-effects", "glassmorphism", "particles", "canvas", "ripple", "glow", "llm-friendly", "zero-dependency", "visual-effects"],
   "author": "ElBenjaMasLindo",
   "license": "MPL-2.0",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "type": "module",
   "sideEffects": false,
   "exports": {
