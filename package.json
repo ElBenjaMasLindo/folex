@@ -37,18 +37,8 @@
     "type": "git",
     "url": "git+https://github.com/ElBenjaMasLindo/folex.git"
   },
-  "keywords": [
-    "css-effects",
-    "glassmorphism",
-    "particles",
-    "canvas",
-    "ripple",
-    "glow",
-    "llm-friendly",
-    "zero-dependency",
-    "visual-effects"
-  ],
-  "author": "@elbenjamaslindo",
+  "keywords": ["css-effects", "glassmorphism", "particles", "canvas", "ripple", "glow", "llm-friendly", "zero-dependency", "visual-effects"],
+  "author": "ElBenjaMasLindo",
   "homepage": "https://github.com/ElBenjaMasLindo/folex#readme",
   "bugs": {
     "url": "https://github.com/ElBenjaMasLindo/folex/issues"
