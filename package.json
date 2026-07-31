@@ -1,7 +1,10 @@
 {
   "name": "folex-fx",
-  "version": "0.4.0",
   "description": "Lightweight, LLM-friendly layering library that makes plain HTML look magical.",
+  "keywords": ["css-effects", "glassmorphism", "particles", "canvas", "ripple", "glow", "llm-friendly", "zero-dependency", "visual-effects"],
+  "author": "ElBenjaMasLindo",
+  "license": "MPL-2.0",
+  "version": "0.4.1",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -46,21 +49,8 @@
     "type": "git",
     "url": "git+https://github.com/ElBenjaMasLindo/folex.git"
   },
-  "keywords": [
-    "css-effects",
-    "glassmorphism",
-    "particles",
-    "canvas",
-    "ripple",
-    "glow",
-    "llm-friendly",
-    "zero-dependency",
-    "visual-effects"
-  ],
-  "author": "ElBenjaMasLindo",
   "homepage": "https://github.com/ElBenjaMasLindo/folex#readme",
   "bugs": {
     "url": "https://github.com/ElBenjaMasLindo/folex/issues"
-  },
-  "license": "MPL-2.0"
+  }
 }
