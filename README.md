@@ -202,4 +202,4 @@ Contributions are welcome! Please follow these guidelines:
 
 ## License
 
-[Mozilla Public License 2.0](https://mozilla.org/MPL/2.0/) — behaves like MIT when you `npm install` and use it as-is: no copyleft obligation on your code. Only applies if you modify folex's own source files. See [LICENSE](LICENSE) for full terms.
+[MIT](LICENSE) © 2026 ElBenjaMasLindo and contributors
